@@ -133,6 +133,34 @@ Examples:
 - A complex but disposable brainstorm may stay Lite or Standard.
 - A publication-bound result should normally be High Precision.
 
+## Dispatch contract
+
+After selecting a protocol, use the following execution contract.
+
+### When sibling Skill invocation is available
+
+- Lite → invoke `cognitive-lite` and transfer execution to it.
+- Standard → invoke `cognitive-standard` and transfer execution to it.
+- High Precision → invoke `cognitive-high-precision` and transfer execution to it.
+
+Pass along the user's request, relevant context, explicit constraints, and any routing-relevant findings. Do not duplicate the child Skill's work or add a second competing protocol layer after dispatch.
+
+If the selected child Skill cannot be loaded or invoked, continue using the fallback below rather than stopping solely because dispatch is unavailable.
+
+### When sibling Skill invocation is unavailable
+
+Apply the selected protocol directly using its documented semantics:
+
+- **Lite:** perform a compact intent check, quick reframe, limited exploration, sanity check, compression, and next action.
+- **Standard:** use Intent → Discover → Reframe → Explore → Attack → Verify → Compress → Decide → Execute → Audit.
+- **High Precision:** use Intent → Scope → Discover → Independent Reframes → Evidence Map → Parallel Exploration → Adversarial Review → Verification → Synthesis → Compression → Human Decision → Execution → Independent Audit.
+
+Fallback execution must preserve the selected protocol's rigor, escalation or downgrade rules, human decision boundaries, and output discipline. It is a compatibility path, not permission to substitute a shallower generic answer.
+
+### Dispatch transparency
+
+Normally do not expose whether execution used sibling invocation or fallback. Mention it only when the distinction affects capability, verification, or the user's ability to reproduce the result.
+
 ## Dynamic escalation
 
 Routing is not a one-time decision.
