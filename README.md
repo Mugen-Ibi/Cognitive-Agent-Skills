@@ -1,8 +1,18 @@
 # Cognitive Agent Skills
 
+[日本語版](README.ja.md)
+
 A small Human–AI cognitive protocol suite designed to reduce the user's problem-framing and evaluation bottlenecks.
 
 The suite lets an AI explore beyond the user's initial framing, challenge its own proposals, verify decision-changing claims, and compress the result into a human-sized decision brief. Use the router as the default entry point, or invoke a specific protocol when the appropriate depth is already known.
+
+## Background: cognitive limits
+
+Human reasoning is constrained by limited attention, working memory, time, and access to knowledge. People also tend to formulate problems using concepts they already know, which can leave hidden assumptions, missing alternatives, and second-order effects outside the initial frame. The bottleneck is therefore not only finding an answer; it is also discovering the right question, evaluating competing explanations, and deciding how much verification is worth the cost.
+
+AI can widen the search space, but unstructured use creates its own problems: plausible errors, excessive alternatives, premature convergence, and outputs too large for a person to evaluate. More reasoning is not automatically better if it increases cost without changing the decision.
+
+This suite treats those limits as a Human–AI system design constraint rather than an individual failing. It delegates discovery, reframing, exploration, criticism, verification, and compression to the AI at a depth proportional to the task. The human retains ownership of values, risk acceptance, and consequential or irreversible decisions.
 
 ## Skills
 
@@ -141,6 +151,7 @@ When sibling skill invocation is supported, the router transfers execution to th
 ```text
 Cognitive-Agent-Skills/
 ├── README.md
+├── README.ja.md
 └── skills/
     ├── cognitive-router/
     │   └── SKILL.md
