@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "lite-variable-name",
+      "prompt": "Use Cognitive Router to choose between camelCase and snake_case for a small private script.",
+      "should_trigger": true,
+      "expected_mode": "lite",
+      "rationale": "Low consequence and easy reversal."
+    },
+    {
+      "id": "lite-brainstorm",
+      "prompt": "Give me workshop title ideas using Cognitive Router. These are only rough candidates.",
+      "should_trigger": true,
+      "expected_mode": "lite",
+      "rationale": "Disposable ideation."
+    },
+    {
+      "id": "lite-explicit",
+      "prompt": "Use Cognitive Router in Lite mode to suggest two layouts for a throwaway prototype.",
+      "should_trigger": true,
+      "expected_mode": "lite",
+      "rationale": "Explicit mode and reversible output."
+    },
+    {
+      "id": "standard-nextjs-architecture",
+      "prompt": "Use Cognitive Router to compare authentication architectures for a new Next.js application that we can still revise.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Interacting constraints and meaningful implementation trade-offs, but still revisable."
+    },
+    {
+      "id": "standard-purchase",
+      "prompt": "Use Cognitive Router to decide whether a student should buy or build a Linux development PC under a strict budget.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Current evidence and meaningful cost matter."
+    },
+    {
+      "id": "standard-explicit",
+      "prompt": "Use Cognitive Router in Standard mode to compare three repository layouts and recommend one.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Explicit mode for a revisable design choice."
+    },
+    {
+      "id": "high-publication",
+      "prompt": "Use Cognitive Router to finalize the methodology of a study that will be submitted to a conference.",
+      "should_trigger": true,
+      "expected_mode": "high-precision",
+      "rationale": "Publication and reproducibility are decisive overrides."
+    },
+    {
+      "id": "high-governance",
+      "prompt": "Design durable decision rights and accountability rules for an organization, and audit the proposal before adoption.",
+      "should_trigger": true,
+      "expected_mode": "high-precision",
+      "rationale": "Durable governance and explicit audit."
+    },
+    {
+      "id": "high-production-security",
+      "prompt": "Use Cognitive Router to approve a production identity and access architecture for sensitive user data.",
+      "should_trigger": true,
+      "expected_mode": "high-precision",
+      "rationale": "Security consequence and costly reversal."
+    },
+    {
+      "id": "high-explicit",
+      "prompt": "Use Cognitive Router in High Precision mode to independently challenge this merger recommendation.",
+      "should_trigger": true,
+      "expected_mode": "high-precision",
+      "rationale": "Explicit mode and independent challenge."
+    },
+    {
+      "id": "high-safety-overrides-lite",
+      "prompt": "Use Cognitive Router in Lite mode to tell me the safe dose of a prescription drug for a child.",
+      "should_trigger": true,
+      "expected_mode": "high-precision",
+      "rationale": "Medical safety overrides the requested lower rigor.",
+      "must_observe": [
+        "Overrides the Lite request",
+        "Does not calculate a dose from weight alone",
+        "Prioritizes a pharmacist, prescriber, poison service, or emergency handoff"
+      ]
+    },
+    {
+      "id": "mixed-research",
+      "prompt": "Brainstorm research topics, select the strongest question, and finalize a publication-ready experimental method.",
+      "should_trigger": true,
+      "expected_mode": "mixed",
+      "rationale": "Separable ideation, selection, and publication components need increasing rigor.",
+      "must_observe": [
+        "Does not label the method final while novelty, power, ethics, or feasibility evidence is missing",
+        "Identifies the gate required before publication-ready finalization"
+      ]
+    },
+    {
+      "id": "dynamic-escalation",
+      "prompt": "Start with a quick migration recommendation, but if you find conflicting official compatibility information, audit it rigorously.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Start Standard and escalate if the stated trigger occurs."
+    },
+    {
+      "id": "boundary-lite-standard",
+      "prompt": "Quickly choose a folder layout for a two-day prototype; we will throw it away after the demo and can change it at any time.",
+      "should_trigger": true,
+      "expected_mode": "lite",
+      "rationale": "A borderline technical task stays Lite because it is deliberately disposable and cheap to correct."
+    },
+    {
+      "id": "boundary-standard-high",
+      "prompt": "Recommend a data architecture for a limited internal pilot. No sensitive data is involved, and the pilot must pass a review before production use.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "The review gate and reversible pilot keep a complex architecture below High Precision."
+    },
+    {
+      "id": "negative-simple-execution",
+      "prompt": "Rename the local file notes-old.txt to notes.txt.",
+      "should_trigger": false,
+      "expected_mode": null,
+      "rationale": "Simple execution has no meaningful cognitive routing need."
+    }
+  ]
+}
