@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cognitive Router"
+  short_description: "Match reasoning rigor to each task"
+  default_prompt: "Use $cognitive-router to analyze this request at the right depth."
+
+policy:
+  allow_implicit_invocation: true

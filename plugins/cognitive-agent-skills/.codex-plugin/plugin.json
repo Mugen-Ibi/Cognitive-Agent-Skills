@@ -1,0 +1,36 @@
+{
+  "name": "cognitive-agent-skills",
+  "version": "2.0.0",
+  "description": "Adaptive cognitive routing for decisions, research, planning, and implementation.",
+  "author": {
+    "name": "Mugen-Ibi",
+    "url": "https://github.com/Mugen-Ibi"
+  },
+  "homepage": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+  "repository": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+  "keywords": [
+    "decision-making",
+    "reasoning",
+    "research",
+    "cognitive-routing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Cognitive Agent Skills",
+    "shortDescription": "Match reasoning rigor to the task",
+    "longDescription": "Route each request to the lightest sufficient cognitive protocol, then reframe, verify, challenge, execute, and compress the result at a depth proportional to consequence and uncertainty.",
+    "developerName": "Mugen-Ibi",
+    "category": "Productivity",
+    "capabilities": [
+      "Analysis",
+      "Decision Support",
+      "Research"
+    ],
+    "websiteURL": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+    "defaultPrompt": [
+      "Use Cognitive Router to analyze this request at the right depth.",
+      "Use Cognitive Router in Standard mode to compare these options.",
+      "Use Cognitive Router in High Precision mode to audit this plan."
+    ]
+  }
+}
