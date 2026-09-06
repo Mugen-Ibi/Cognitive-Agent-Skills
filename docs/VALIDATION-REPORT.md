@@ -1,6 +1,6 @@
-# Validation report: 2.0.0
+# Validation report: 2.0.1
 
-Date: 2026-09-05
+Date: 2026-09-06
 
 ## Deterministic checks
 
@@ -12,7 +12,7 @@ Date: 2026-09-05
 | Python compile check for repository validator | Pass |
 | Git whitespace/error check (`git diff --check`) | Pass |
 
-The repository validator checks the exact v2 manifest and UI metadata shape, semantic versioning, HTTPS metadata URLs, component paths, Skill frontmatter, references, Markdown links, unfinished placeholders, retired v1 layout, and evaluation schema.
+The repository validator checks the marketplace catalog, exact v2 Plugin manifest and UI metadata shape, semantic versioning, HTTPS metadata URLs, component paths, Skill frontmatter, references, Markdown links, unfinished placeholders, retired v1 layout, and evaluation schema.
 
 The OpenAI validators are available in the authoring environment and are not vendored into this repository. Run them again in the current Plugin/Skill authoring environment before a release because platform schemas can change.
 
@@ -69,4 +69,3 @@ The implementation was revised to:
 - CI validates package structure and evaluation data, but it does not call a model and therefore cannot prove implicit invocation or routing behavior.
 - Behavioral cases require fresh-host execution; model and host updates can change results.
 - Public Plugin Directory submission and review were not performed.
-- License selection remains unresolved and blocks clear external redistribution rights.

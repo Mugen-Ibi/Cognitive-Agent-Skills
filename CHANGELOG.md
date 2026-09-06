@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1 - 2026-09-06
+
+- Add a repository marketplace manifest so `codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills` can discover the Plugin.
+- Validate the marketplace entry and its link to the Plugin manifest in CI.
+- Document executable repository and local installation steps.
+- Align Plugin metadata and project documentation with the Apache-2.0 license.
+
 ## 2.0.0 - 2026-09-05
 
 - Package the project as a skills-only Plugin for supported Chat, Work, and Codex surfaces.

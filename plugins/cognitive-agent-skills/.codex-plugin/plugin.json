@@ -1,6 +1,6 @@
 {
   "name": "cognitive-agent-skills",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Adaptive cognitive routing for decisions, research, planning, and implementation.",
   "author": {
     "name": "Mugen-Ibi",
@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
   "repository": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+  "license": "Apache-2.0",
   "keywords": [
     "decision-making",
     "reasoning",

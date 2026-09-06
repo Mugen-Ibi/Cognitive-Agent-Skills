@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "cognitive-agent-skills"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
+MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 SKILL = PLUGIN / "skills" / "cognitive-router"
 SKILL_MD = SKILL / "SKILL.md"
 OPENAI_YAML = SKILL / "agents" / "openai.yaml"
@@ -59,11 +60,13 @@ class Validator:
             self.errors.append("plugin manifest must be a JSON object")
             return
 
-        allowed_top = {
+        required_top = {
             "name", "version", "description", "author", "homepage", "repository",
-            "keywords", "skills", "interface",
+            "license", "keywords", "skills", "interface",
         }
-        self.require(set(data) == allowed_top, f"unexpected or missing plugin fields: {sorted(set(data) ^ allowed_top)}")
+        allowed_top = required_top | {"mcpServers", "apps"}
+        self.require(required_top <= set(data), f"missing plugin fields: {sorted(required_top - set(data))}")
+        self.require(set(data) <= allowed_top, f"unsupported plugin fields: {sorted(set(data) - allowed_top)}")
 
         self.require(data.get("name") == PLUGIN.name, "plugin name must match its directory")
         version = data.get("version")
@@ -83,16 +86,23 @@ class Validator:
             self.require(self.is_https_url(author.get("url")), "author.url must be an absolute HTTPS URL")
         self.require(self.is_https_url(data.get("homepage")), "homepage must be an absolute HTTPS URL")
         self.require(self.is_https_url(data.get("repository")), "repository must be an absolute HTTPS URL")
+        self.require(data.get("license") == "Apache-2.0", "plugin license must be Apache-2.0")
         keywords = data.get("keywords")
         self.require(isinstance(keywords, list) and all(isinstance(item, str) and item for item in keywords), "keywords must be a non-empty string list")
         if isinstance(interface, dict):
-            allowed_interface = {
+            required_interface = {
                 "displayName", "shortDescription", "longDescription", "developerName",
                 "category", "capabilities", "websiteURL", "defaultPrompt",
             }
-            self.require(set(interface) == allowed_interface, f"unexpected or missing interface fields: {sorted(set(interface) ^ allowed_interface)}")
+            allowed_interface = required_interface | {
+                "privacyPolicyURL", "termsOfServiceURL", "brandColor", "composerIcon",
+                "logo", "logoDark", "screenshots",
+            }
+            self.require(required_interface <= set(interface), f"missing interface fields: {sorted(required_interface - set(interface))}")
+            self.require(set(interface) <= allowed_interface, f"unsupported interface fields: {sorted(set(interface) - allowed_interface)}")
             for field in ("displayName", "shortDescription", "longDescription", "developerName", "category"):
-                self.require(isinstance(interface.get(field), str) and bool(interface[field].strip()), f"interface.{field} is required")
+                value = interface.get(field)
+                self.require(isinstance(value, str) and bool(value.strip()), f"interface.{field} is required")
             if isinstance(author, dict):
                 self.require(interface.get("developerName") == author.get("name"), "developerName must match author.name")
             self.require(self.is_https_url(interface.get("websiteURL")), "interface.websiteURL must be an absolute HTTPS URL")
@@ -107,6 +117,37 @@ class Validator:
         self.require(skills_path == "./skills/", "manifest skills path must be ./skills/")
         self.require((PLUGIN / "skills").is_dir(), "manifest skills directory does not exist")
         self.require("mcpServers" not in data and "apps" not in data, "skills-only plugin must not declare MCP or app configuration")
+
+    def validate_marketplace(self) -> None:
+        data = self.load_json(MARKETPLACE)
+        if not isinstance(data, dict):
+            self.errors.append("marketplace manifest must be a JSON object")
+            return
+
+        self.require(data.get("name") == "cognitive-agent-skills", "unexpected marketplace name")
+        interface = data.get("interface")
+        self.require(
+            isinstance(interface, dict) and interface.get("displayName") == "Cognitive Agent Skills",
+            "marketplace interface.displayName must be Cognitive Agent Skills",
+        )
+        plugins = data.get("plugins")
+        self.require(isinstance(plugins, list) and len(plugins) == 1, "marketplace must contain exactly one plugin")
+        if not isinstance(plugins, list) or len(plugins) != 1 or not isinstance(plugins[0], dict):
+            return
+
+        entry = plugins[0]
+        self.require(entry.get("name") == PLUGIN.name, "marketplace plugin name must match plugin directory")
+        source = entry.get("source")
+        self.require(
+            source == {"source": "local", "path": "./plugins/cognitive-agent-skills"},
+            "marketplace source must point to ./plugins/cognitive-agent-skills",
+        )
+        self.require(
+            entry.get("policy") == {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+            "marketplace policy must declare AVAILABLE and ON_INSTALL",
+        )
+        self.require(entry.get("category") == "Productivity", "marketplace category must be Productivity")
+        self.require(MANIFEST.is_file(), "marketplace source does not contain .codex-plugin/plugin.json")
 
     @staticmethod
     def is_https_url(value: object) -> bool:
@@ -226,6 +267,7 @@ class Validator:
                     self.require((path.parent / clean_target).resolve().exists(), f"broken repository link in {path.relative_to(ROOT)}: {target}")
 
     def run(self) -> int:
+        self.validate_marketplace()
         self.validate_manifest()
         self.validate_skill()
         self.validate_evals()

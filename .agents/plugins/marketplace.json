@@ -1,0 +1,20 @@
+{
+  "name": "cognitive-agent-skills",
+  "interface": {
+    "displayName": "Cognitive Agent Skills"
+  },
+  "plugins": [
+    {
+      "name": "cognitive-agent-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cognitive-agent-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

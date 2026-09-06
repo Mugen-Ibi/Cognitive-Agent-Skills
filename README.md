@@ -28,6 +28,7 @@ The router can use different modes for separable parts of one request and can es
 ## Repository layout
 
 ```text
+.agents/plugins/marketplace.json
 plugins/cognitive-agent-skills/
 ├── .codex-plugin/plugin.json
 └── skills/cognitive-router/
@@ -66,9 +67,21 @@ Use Cognitive Router in High Precision mode to audit this publication methodolog
 
 The normal output contains conclusions, evidence, assumptions, trade-offs, uncertainty, and next actions—not hidden chain-of-thought.
 
-## Install for local development
+## Install
 
-Clone the repository and use `plugins/cognitive-agent-skills` as the plugin root in a supported local marketplace or plugin development workflow.
+Add this repository as a Codex marketplace:
+
+```bash
+codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills
+```
+
+Restart the ChatGPT desktop app, open the Plugins Directory, select **Cognitive Agent Skills**, and install the **Cognitive Agent Skills** plugin. Start a new conversation so the installed skill is discovered.
+
+For local development from a clone, run this command from the repository root:
+
+```bash
+codex plugin marketplace add .
+```
 
 For standalone Codex skill use, copy or link:
 
@@ -98,4 +111,4 @@ Version 2 is a breaking packaging and invocation change. The separate `cognitive
 
 ## Project status and license
 
-The plugin manifest is versioned as `2.0.0`. A license has not been selected; copyright remains with the repository owner. Choose and add a license before public redistribution or accepting contributions that depend on explicit reuse rights.
+The plugin manifest is versioned as `2.0.1`. This project is licensed under the Apache License 2.0; see [LICENSE](LICENSE).

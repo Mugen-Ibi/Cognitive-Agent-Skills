@@ -19,6 +19,8 @@ Plugin package
     └── conditional evidence reference
 ```
 
+The repository is also a Codex marketplace. `.agents/plugins/marketplace.json` points to the Plugin package at `./plugins/cognitive-agent-skills`, while `.codex-plugin/plugin.json` remains the Plugin entrypoint.
+
 ## Verified platform constraints
 
 OpenAI's current documentation distinguishes the two layers:
@@ -92,6 +94,6 @@ The move from four independently invocable Skills to one adaptive Skill is a bre
 
 ## Deferred decisions
 
-- License selection remains with the repository owner.
+- The project is distributed under the Apache License 2.0.
 - Public Plugin Directory submission is not performed by repository changes alone.
 - Visual identity assets are optional and intentionally omitted until a stable brand is chosen.

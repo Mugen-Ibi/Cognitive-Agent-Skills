@@ -10,7 +10,7 @@ Use this checklist for every Plugin release.
 6. Update the manifest semantic version and `CHANGELOG.md`.
 7. Confirm that README, migration, architecture, and evaluation claims match the package.
 8. Confirm the repository contains no secrets, temporary artifacts, or untracked release files.
-9. Resolve the license before external redistribution or contribution intake.
+9. Confirm `LICENSE`, README license text, and the manifest `license` field remain aligned on Apache-2.0.
 10. Build the submission archive from `plugins/cognitive-agent-skills` only and run the platform submission checks.
 
 Do not treat a repository tag as proof that the public Plugin Directory accepted or published the package.

@@ -28,6 +28,7 @@ Routerは一つの依頼の分離可能な部分に別々のモードを適用�
 ## リポジトリ構造
 
 ```text
+.agents/plugins/marketplace.json
 plugins/cognitive-agent-skills/
 ├── .codex-plugin/plugin.json
 └── skills/cognitive-router/
@@ -66,9 +67,21 @@ Cognitive RouterをHigh Precisionモードで使い、この投稿予定の研�
 
 通常の出力は、結論、根拠、前提、トレードオフ、不確実性、次の行動を示します。内部のchain-of-thoughtは出力しません。
 
-## ローカル開発での導入
+## 導入
 
-リポジトリをcloneし、対応するローカルmarketplaceまたはPlugin開発フローで`plugins/cognitive-agent-skills`をPlugin rootとして指定します。
+このリポジトリをCodex marketplaceとして追加します。
+
+```bash
+codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills
+```
+
+ChatGPTデスクトップアプリを再起動し、Plugins Directoryで**Cognitive Agent Skills**を選択して、**Cognitive Agent Skills** Pluginをインストールします。導入したSkillを認識させるため、新しい会話を開始してください。
+
+cloneしたリポジトリからローカル開発する場合は、リポジトリrootで次を実行します。
+
+```bash
+codex plugin marketplace add .
+```
 
 Codexでstandalone Skillとして利用する場合は、次のディレクトリをユーザーまたはrepository scopeのSkillsディレクトリへコピーまたはリンクします。
 
@@ -98,4 +111,4 @@ Version 2は、package構造と呼び出し方法を変更します。個別の`
 
 ## 状態とライセンス
 
-Plugin manifestのversionは`2.0.0`です。ライセンスは未選択で、著作権はrepository ownerに帰属します。外部再配布や、明示的な利用条件を必要とするcontribution受け入れの前にライセンスを選択・追加してください。
+Plugin manifestのversionは`2.0.1`です。本projectはApache License 2.0で公開されています。詳しくは[LICENSE](LICENSE)を参照してください。
