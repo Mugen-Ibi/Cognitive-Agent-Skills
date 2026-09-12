@@ -90,8 +90,8 @@
       "expected_mode": "mixed",
       "rationale": "Separable ideation, selection, and publication components need increasing rigor.",
       "must_observe": [
-        "Does not label the method final while novelty, power, ethics, or feasibility evidence is missing",
-        "Identifies the gate required before publication-ready finalization"
+        "Marks methodology provisional when applicable decision-changing prerequisites remain unresolved",
+        "Does not demand irrelevant statistical or ethics procedures merely to fill a checklist"
       ]
     },
     {
@@ -121,6 +121,46 @@
       "should_trigger": false,
       "expected_mode": null,
       "rationale": "Simple execution has no meaningful cognitive routing need."
+    },
+    {
+      "id": "negative-explanation",
+      "prompt": "Explain the difference between a stack and a queue.",
+      "should_trigger": false,
+      "expected_mode": null,
+      "rationale": "Ordinary explanation needs no decision workflow."
+    },
+    {
+      "id": "negative-typo",
+      "prompt": "Fix the spelling mistake in this sentence: teh cat sat.",
+      "should_trigger": false,
+      "expected_mode": null,
+      "rationale": "Routine editing needs no routing."
+    },
+    {
+      "id": "authorized-completion",
+      "prompt": "Use Cognitive Router. In the provided disposable local fixture, implement the accepted CSV export fix and verify it. Local edits and checks are authorized; continue until the requested export works.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Existing authority carries through implementation and relevant verification.",
+      "must_observe": [
+        "Produces and checks the requested local artifact when fixture is provided",
+        "Does not ask again for already authorized local edits",
+        "Reports actual blockers without claiming execution"
+      ]
+    },
+    {
+      "id": "review-only-boundary",
+      "prompt": "Use Cognitive Router to review this migration proposal only. Do not edit files or apply the migration.",
+      "should_trigger": true,
+      "expected_mode": "standard",
+      "rationale": "Analysis does not grant mutation authority."
+    },
+    {
+      "id": "explicit-simple",
+      "prompt": "Use Cognitive Router in Lite mode: choose a name for my disposable demo folder.",
+      "should_trigger": true,
+      "expected_mode": "lite",
+      "rationale": "Explicit use remains available without required reference reads."
     }
   ]
 }

@@ -1,3 +1,12 @@
+# 3.0.0 — 2026-09-12
+
+- Narrow implicit discovery to decision support; retain explicit mode requests.
+- Replace mandatory scores, reference reads, stage sequences, and option quotas with outcome contracts.
+- Preserve evidence, uncertainty, scope, and review-independence requirements.
+- Continue authorized work through relevant verification and recoverable defects.
+- Correct Japanese README layout and Apache-2.0 license.
+- Extend behavioral evaluation for non-activation and task completion.
+
 # Changelog
 
 ## 2.0.1 - 2026-09-06

@@ -1,3 +1,15 @@
+# Migration to v3
+
+The plugin and skill names, marketplace target, reference paths, and implicit-invocation policy remain unchanged. Update the installed package through the host's supported update mechanism after release; this branch does not update existing installations.
+
+The behavior changes: ordinary explanation and execution no longer invite routing, numerical scores and mandatory stage sequences are removed, and prior authorization carries through relevant verification. Explicit Lite / Standard / High Precision requests still work. Integrations must not depend on a mode announcement, fixed output headings, or a routing score.
+
+Use the behavioral comparison in [Evaluation](EVALUATION.md) before adopting v3 in consequential workflows. Roll back by installing the prior released package through the host; do not overwrite unrelated user settings.
+
+---
+
+## Historical v1 to v2 migration
+
 # Migration from v1 to v2
 
 Version 2 replaces four active Skills with one adaptive `cognitive-router` Skill packaged inside `cognitive-agent-skills`.

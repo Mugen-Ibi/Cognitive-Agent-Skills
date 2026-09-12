@@ -2,113 +2,40 @@
 
 [日本語](README.ja.md)
 
-An adaptive Human–AI reasoning system that matches analytical rigor to the cost of being wrong.
+Decision support for competing options and uncertain problem framing. One `cognitive-router` skill helps produce actionable recommendations and complete authorized work while keeping the user's decision burden small.
 
-Version 2 packages one canonical `cognitive-router` skill as a skills-only plugin. The skill selects Lite, Standard, or High Precision, loads only the selected protocol, and returns a decision-sized result. This replaces the former four-skill dispatch design.
+Version 3 replaces fixed cognitive sequences with outcome contracts. It preserves Lite, Standard, and High Precision as effort preferences, without changing the host model or permissions.
 
-## Why the hybrid design
+| Depth | Intended use |
+|---|---|
+| Lite | Disposable or easily corrected choices; normally no reference reads |
+| Standard | Interacting constraints and meaningful trade-offs |
+| High Precision | Consequential reliance, costly reversal, or required auditability |
 
-- **Skill is the implementation.** `SKILL.md` and its references define the cognitive workflow.
-- **Plugin is the distribution boundary.** It makes the workflow installable across supported ChatGPT Chat, Work, and Codex surfaces.
-- **One adaptive skill avoids collisions.** It removes sibling-skill dispatch assumptions and reduces implicit-trigger and metadata overhead.
-- **The skill remains portable.** Codex CLI and IDE users can install the bundled `cognitive-router` directory as a standalone skill.
-
-No MCP server is included. The workflow uses the host's available tools and evidence sources without adding an external service or authentication boundary.
-
-## Modes
-
-| Mode | Best for | Default behavior |
-|---|---|---|
-| Lite | reversible, low-cost questions and ideation | quick reframe and sanity check |
-| Standard | multi-step work with meaningful trade-offs | explore, attack, verify, execute, audit |
-| High Precision | consequential, hard-to-reverse, publication or governance work | evidence map, independent reframes, adversarial review, independent audit |
-
-The router can use different modes for separable parts of one request and can escalate or downgrade as the true risk becomes clearer.
-
-## Repository layout
+Routine execution and explanation do not need implicit activation. Explicit invocation remains available:
 
 ```text
-.agents/plugins/marketplace.json
-plugins/cognitive-agent-skills/
-├── .codex-plugin/plugin.json
-└── skills/cognitive-router/
-    ├── SKILL.md
-    ├── agents/openai.yaml
-    └── references/
-        ├── routing.md
-        ├── lite.md
-        ├── standard.md
-        ├── high-precision.md
-        └── evidence.md
-docs/
-├── ARCHITECTURE.md
-├── EVALUATION.md
-├── MIGRATION.md
-├── RELEASE.md
-├── REVIEW.md
-└── VALIDATION-REPORT.md
-evals/cases.json
-scripts/validate.py
+Use Cognitive Router to compare these approaches and recommend one.
+Use Cognitive Router in High Precision mode to audit this methodology.
+Implement the accepted approach within the agreed scope and verify the result.
 ```
 
-## Use
+## Package
 
-After installing the plugin, ask normally or invoke the bundled skill explicitly:
+- `.agents/plugins/marketplace.json`: repository marketplace.
+- `plugins/cognitive-agent-skills/.codex-plugin/plugin.json`: plugin manifest.
+- `plugins/cognitive-agent-skills/skills/cognitive-router/`: independently packaged skill with conditional references and UI metadata.
+- `evals/cases.json`: behavioral scenarios, not automated model results.
+- `scripts/validate.py`: deterministic package validation.
 
-```text
-Use Cognitive Router to evaluate this migration plan and recommend the right approach.
-```
+The existing marketplace installation target is `Mugen-Ibi/Cognitive-Agent-Skills`; the standalone skill path is shown above. Installation UI and host support must be checked against current platform documentation. Repository changes do not automatically update installed copies.
 
-You can override the route when the needed rigor is already known:
-
-```text
-Use Cognitive Router in High Precision mode to audit this publication methodology.
-```
-
-The normal output contains conclusions, evidence, assumptions, trade-offs, uncertainty, and next actions—not hidden chain-of-thought.
-
-## Install
-
-Add this repository as a Codex marketplace:
-
-```bash
-codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills
-```
-
-Restart the ChatGPT desktop app, open the Plugins Directory, select **Cognitive Agent Skills**, and install the **Cognitive Agent Skills** plugin. Start a new conversation so the installed skill is discovered.
-
-For local development from a clone, run this command from the repository root:
-
-```bash
-codex plugin marketplace add .
-```
-
-For standalone Codex skill use, copy or link:
-
-```text
-plugins/cognitive-agent-skills/skills/cognitive-router
-```
-
-into a user- or repository-scoped skills directory. Standalone skills and plugin availability differ by product surface; see [Architecture](docs/ARCHITECTURE.md) and the current official OpenAI documentation before distribution.
-
-## Validate
+## Development
 
 ```bash
 python3 scripts/validate.py
 ```
 
-The validation checks the plugin manifest, skill frontmatter, UI metadata, internal links, protocol inventory, evaluation schema, and retired v1 layout. CI runs the same command.
+This checks package consistency, not decision quality. See [Architecture](docs/ARCHITECTURE.md), [Evaluation](docs/EVALUATION.md), [Migration](docs/MIGRATION.md), and [Validation report](docs/VALIDATION-REPORT.md).
 
-Behavioral evaluation cases and the manual procedure are in [Evaluation](docs/EVALUATION.md).
-
-The complete v1 findings and disposition are in [Full review](docs/REVIEW.md).
-
-The exact checks, forward-test outcomes, corrections, and limitations are in the [Validation report](docs/VALIDATION-REPORT.md).
-
-## Migration from v1
-
-Version 2 is a breaking packaging and invocation change. The separate `cognitive-lite`, `cognitive-standard`, and `cognitive-high-precision` skills are now protocol references selected by `cognitive-router`. See [Migration](docs/MIGRATION.md).
-
-## Project status and license
-
-The plugin manifest is versioned as `2.0.1`. This project is licensed under the Apache License 2.0; see [LICENSE](LICENSE).
+Manifest version: `3.0.0`. License: [Apache-2.0](LICENSE).
