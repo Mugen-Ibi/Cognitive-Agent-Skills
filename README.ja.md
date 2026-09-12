@@ -1,8 +1,6 @@
-# Cognitive Agent Skills
+# Cognitive Agent Skills(V2)
 
 [English](README.md)
-
-# Cognitive Agent Skills (v2)
 
 **Cognitive Agent Skills** は、LLM（大言語モデル）エージェントの思考プロセスと意思決定品質を制御・最適化するための**思考プロトコル（Cognitive Architecture）パッケージ**です。
 
