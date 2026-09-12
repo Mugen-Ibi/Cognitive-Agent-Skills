@@ -1,3 +1,21 @@
+# v3 validation — 2026-09-12
+
+Base revision: `6745026`. Proposed manifest version: `3.0.0`.
+
+- `python3 scripts/validate.py`: passed (package, links, metadata, 21-case schema).
+- Authoring skill `quick_validate.py`: passed.
+- `git diff --check`: passed.
+- Entry Markdown: 5,601 → 2,983 UTF-8 bytes (46.7% smaller).
+- All runtime Markdown: 22,395 → 8,796 bytes (60.7% smaller).
+
+One context-isolated forward test used an explicit Lite request to choose between `demo` and `experiment` for a disposable demonstration folder. It returned `demo` with one relevant reason, no questions or fabricated alternatives. It read the entrypoint and the explicitly requested Lite reference only. This checks one explicit-invocation case, not implicit discovery or the full suite.
+
+Byte counts are static size measurements, not tokenizer counts or measured runtime savings. The full behavioral suite, cross-model v2/v3/no-skill comparison, installation on supported hosts, and public distribution checks have not been executed. This is a reviewable redesign, not a validated performance improvement or installed update.
+
+---
+
+## Historical v2 report (does not validate v3)
+
 # Validation report: 2.0.1
 
 Date: 2026-09-06

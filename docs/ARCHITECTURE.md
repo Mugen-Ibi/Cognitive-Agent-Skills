@@ -1,99 +1,38 @@
-# Architecture decision record: v2
+# Architecture: v3 outcome contracts
 
-Status: Accepted
-Date: 2026-09-05
+Status: proposed for merge; 2026-09-12.
+
+## Basis
+
+The [OpenAI article](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) recommends precise discovery descriptions, conditional references, less prescribed process, and explicit completion boundaries. The choices below are this project's application of that guidance, not measured performance claims.
 
 ## Decision
 
-Implement the cognitive system as one adaptive Skill and distribute it as a skills-only Plugin.
+Keep one `cognitive-router` skill distributed by the existing skills-only plugin and marketplace. Preserve its public name and reference paths. Change the runtime contract from mandatory protocol execution to decision support proportional to consequence and uncertainty.
 
-The Plugin is not a competing cognitive implementation. It is the installable package around the Skill:
+| v2 constraint | v3 decision | Reason |
+|---|---|---|
+| Broad reviews/research/implementation trigger | Competing options, uncertain framing, explicit invocation | Avoid competing with ordinary execution skills |
+| Always read routing and one mode | Inline depth guidance; conditional references | Direct choices need no extra reads |
+| Five numerical dimensions and thresholds | Qualitative consequence and reliance | Avoid false precision and routing work |
+| Six to thirteen ordered stages | Observable outcome and relevant criteria | Allow task-dependent order |
+| Reframe and option counts | Material alternatives only | Avoid manufactured choices |
+| Generic human decision phase | Existing scope and authority determine boundaries | Avoid renewed approval for authorized work |
+| One defect-repair retry | Continue useful recoverable repairs within scope | Avoid premature stopping |
+| Mode-matching as main evaluation | Completion, boundary, evidence, user burden | Evaluate utility rather than ceremony |
 
-```text
-Plugin package
-└── cognitive-router Skill
-    ├── routing entrypoint
-    ├── Lite protocol reference
-    ├── Standard protocol reference
-    ├── High Precision protocol reference
-    └── conditional evidence reference
-```
+## Runtime and compatibility
 
-The repository is also a Codex marketplace. `.agents/plugins/marketplace.json` points to the Plugin package at `./plugins/cognitive-agent-skills`, while `.codex-plugin/plugin.json` remains the Plugin entrypoint.
+Discovery selects the skill for decision support. The entrypoint can handle Lite directly; Standard, High Precision, ambiguous routing, and evidence references are conditional. Mixed tasks use local rigor without a mandatory transition state machine.
 
-## Verified platform constraints
+Lite, Standard, and High Precision remain accepted user vocabulary, not model selectors or API reasoning-effort controls. Host permissions remain authoritative. A review request does not authorize implementation; an authorized implementation request should continue through relevant verification.
 
-OpenAI's current documentation distinguishes the two layers:
+No new MCP server, agent orchestrator, model-specific fork, personal-memory store, or always-loaded AGENTS.md is needed. This repository has no AGENTS.md to simplify. Do not add one merely to repeat the skill.
 
-- A Skill packages instructions and supporting resources for a repeatable workflow.
-- A Plugin is an installable bundle that can include Skills, connectors, or both.
-- Standalone Skills are available in the ChatGPT desktop app, Codex CLI, and the IDE extension.
-- Skills bundled in Plugins are available in Chat and Work across supported ChatGPT web, desktop, and mobile surfaces, and in supported Codex surfaces.
-- Plugins are not available in the Codex IDE extension, so the bundled Skill remains independently installable there.
-- Skills use progressive disclosure: name and description are discovered first, `SKILL.md` is loaded after selection, and supporting references are loaded only when needed.
+The manifest paths are retained. Product-surface and Claude Code installation compatibility are not established by this redesign; consult current platform documentation and perform installation checks before release. Installed copies do not update merely because this branch changes.
 
-Sources:
+## Trade-offs and validation
 
-- [Skills & Plugins](https://learn.chatgpt.com/docs/skills-and-plugins)
-- [Build skills](https://learn.chatgpt.com/docs/build-skills)
-- [Plugins](https://learn.chatgpt.com/docs/plugins)
-- [Package your plugin](https://developers.openai.com/plugins/build/plugins)
+Less prescription may cause weaker models to miss useful analysis. Compare v2, v3, and no-skill baselines on identical tasks before claiming improvement or adding model-specific guidance. The narrowed trigger may miss implicit requests; evaluate discovery separately from explicit invocation. Historical v2 reports do not validate v3.
 
-These are current product behaviors, not permanent compatibility promises. Recheck them before a public release.
-
-## Alternatives considered
-
-| Design | Cross-surface reach | Trigger clarity | Context efficiency | Portability | Verdict |
-|---|---:|---:|---:|---:|---|
-| Four standalone Skills | Low | Low | Low | High | Reject as primary distribution |
-| Four Skills bundled in one Plugin | High | Medium | Medium | High | Viable compatibility design |
-| One monolithic Skill in one Plugin | High | High | Medium | High | Reject: all modes load together |
-| One adaptive Skill with references in one Plugin | High | High | High | High | Selected |
-
-### Why not retain four active Skills
-
-The v1 router attempted to transfer execution to sibling Skills and duplicated a fallback summary. This creates four problems:
-
-1. sibling invocation is not a portable Skill primitive across hosts;
-2. four overlapping descriptions compete for implicit activation;
-3. every installed Skill adds discovery metadata before the relevant instructions are loaded;
-4. the router and child Skills can drift semantically.
-
-The v2 design has one discovery surface and one routing authority. Mode details remain separate references, so selecting Lite does not require loading High Precision instructions.
-
-### Why not use an MCP server
-
-The protocol changes reasoning and workflow, not access to an external system. An MCP server would add hosting, authentication, privacy, availability, and review obligations without providing a necessary capability. The Skill can use whatever first-party or installed tools the host already exposes.
-
-Add MCP only if a future version requires a deterministic shared service, persistent external state, or a tool that cannot be expressed safely as instructions or a local script.
-
-## Runtime flow
-
-1. The host matches the `cognitive-router` name and description, or the user invokes it explicitly.
-2. The entrypoint reads `routing.md` and selects the minimum sufficient mode.
-3. It reads exactly one mode reference initially.
-4. It loads `evidence.md` only when external verification can change the result.
-5. It performs the selected protocol, adapting the mode if new risk or uncertainty appears.
-6. It returns a compressed, audit-relevant result and preserves consequential human decisions.
-
-## Boundaries
-
-- The router controls analytical depth, not model selection or product billing.
-- It does not grant permissions, bypass host policies, or authorize external actions.
-- It does not require the user to inspect internal reasoning.
-- It does not promise factual accuracy without suitable evidence.
-- It avoids fixed output templates when a direct answer is sufficient.
-
-## Versioning
-
-The move from four independently invocable Skills to one adaptive Skill is a breaking change and therefore begins at `2.0.0`.
-
-- Patch: wording and validation fixes with unchanged routing behavior.
-- Minor: backward-compatible modes, references, or evaluation coverage.
-- Major: changes to invocation, routing semantics, or output contracts.
-
-## Deferred decisions
-
-- The project is distributed under the Apache License 2.0.
-- Public Plugin Directory submission is not performed by repository changes alone.
-- Visual identity assets are optional and intentionally omitted until a stable brand is chosen.
+Version 3.0.0 reflects changed routing and completion semantics despite stable paths. See [Evaluation](EVALUATION.md) and [Migration](MIGRATION.md).

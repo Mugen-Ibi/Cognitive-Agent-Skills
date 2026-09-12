@@ -1,91 +1,37 @@
-# Cognitive Agent Skills(V2)
+# Cognitive Agent Skills
 
 [English](README.md)
 
-**Cognitive Agent Skills** は、LLM（大言語モデル）エージェントの思考プロセスと意思決定品質を制御・最適化するための**思考プロトコル（Cognitive Architecture）パッケージ**です。
+複数の選択肢や問題設定の不確かさを、行動に移せる判断へ整理するSkillです。ユーザーの判断負担を減らし、実行を依頼された場合は、許可された範囲で成果物の完成まで進めます。
 
-単に指示通り出力するだけでなく、タスクの「結果の大きさ（Consequence）」「不可逆性（Reversibility）」「複雑さ」「エビデンス要求度」を自動評価し、最適な思考フレームワークへルーティングします。
+v3では固定された思考手順を廃止し、成果・判断基準・完了条件を中心にしました。Lite／Standard／High Precisionは残しますが、モデルや推論エフォートの設定を変更する機能ではありません。
 
----
+| 深度 | 用途 |
+|---|---|
+| Lite | 容易にやり直せる選択。通常は追加資料を読まず回答 |
+| Standard | 複数の制約やトレードオフがある判断 |
+| High Precision | 重大な影響、変更の難しさ、監査可能性が求められる判断 |
 
-## 💡 コアコンセプト
+単純な編集や説明では自動起動を求めません。明示的に「Cognitive Routerで比較して」「High Precisionで研究方法を監査して」と依頼できます。レビューの依頼だけで実装権限を広げることはありません。
 
-1. **リスク・不可逆性ベースの動的ルーティング**
-   単なる「問題の難しさ」ではなく、「間違えた際の実害の大きさ」や「やり直しが効くか」を基準に、AIの思考深度と検証フローを自動で制御します。
-2. **中間思考のバックグラウンド化と成果物の圧縮（Decision-ready Output）**
-   バックグラウンドで厳格な敵対的レビューや検証を行いながらも、ユーザーには無駄な CoT（思考過程）を出力せず、人間が即座に判断できる形式に凝縮して提示します。
-3. **統合された Plugin / Skill アーキテクチャ**
-   `.codex-plugin/plugin.json` を通じた単一のエントリポイントにより、トリガーの誤判定や重複を防ぎ、各種エージェント環境へそのままデプロイ可能です。
+## 構成
 
----
+- `.agents/plugins/marketplace.json`：マーケットプレイス定義
+- `plugins/cognitive-agent-skills/.codex-plugin/plugin.json`：Plugin定義
+- `plugins/cognitive-agent-skills/skills/cognitive-router/`：Skillと必要時に読む参照資料
+- `evals/cases.json`：行動評価ケース
+- `scripts/validate.py`：パッケージ整合性検証
 
-## 🧩 認知モード（Cognitive Modes）
+既存の導入先は `Mugen-Ibi/Cognitive-Agent-Skills` です。利用環境ごとの導入手順・対応状況は公開前に公式資料と実機で確認してください。リポジトリの更新だけでは導入済みSkillは更新されません。
 
-単一のルーティングエンジン（Router）がタスクを判定し、以下のモードおよびモジュールへ分流します。
-
-| モード | 用途・特徴 |
-| :--- | :--- |
-| **Lite** | **低リスク・可逆的なタスク用**<br>思考の再フレームや選択肢生成を最小限に抑え、迅速な実行・回答を優先します。 |
-| **Standard** | **標準的な意思決定タスク用**<br>意図の確認、問題の再定義（リフレーミング）、多角的な探索、攻撃的テスト（Adversarial Test）、出力の圧縮を一貫して行います。 |
-| **High Precision** | **重大な決定・ガバナンス・安全性に関わるタスク用**<br>独立した再フレーム、エビデンスマッピング、対立検証、決定可能性ゲート（Decision-ready Gate）を通過させます。 |
-| **Evidence Reference** | **エビデンス検証モジュール（独立参照用）**<br>一次情報や直接検証を優先し、意思決定上の価値がなくなった時点で検証を即座に終了する効率的な検索ルールを定義します。 |
-
-> 💡 **非起動境界（Non-trigger Boundary）**  
-> 判断や検証を伴わない単純なタスク（単純なテキスト整形や定型出力など）に対しては、思考プロトコルを意図的に起動せず、直接実行してオーバーヘッドを削減します。
-
----
-
-## 📁 ディレクトリ構造
-
-```text
-.
-├── .codex-plugin/
-│   └── plugin.json        # プラグインのメタデータと統合エントリポイント
-├── skills/
-│   ├── router.md          # メインのルーティング・決定論的オーバーライド定義
-│   ├── lite.md            # Lite モードの思考プロトコル
-│   ├── standard.md        # Standard モードの思考プロトコル
-│   ├── high-precision.md  # High Precision モードの思考プロトコル
-│   └── evidence.md        # エビデンス照会・検証プロトコル
-├── evals/
-│   └── cases/             # 行動テスト・評価用テストケース
-└── scripts/
-    └── validate.py        # パッケージ整合性・Frontmatter検証用スクリプト
-
-```
-
----
-
-## 🛠️ 開発とテスト
-
-本リポジトリでは、プロンプトの変更による誤作動（回帰）を防ぐため、Python スクリプトによる自動検証と評価セットを用意しています。
-
-### パッケージ構造の検証
-
-フロントマター、相対パス、マークダウンリンクの整合性をチェックします。
+## 検証
 
 ```bash
-python scripts/validate.py
-
+python3 scripts/validate.py
 ```
 
-### 評価（Evals）の実行
+この検証は構造の整合性を確認します。判断品質の向上を証明するものではありません。
 
-`evals/cases/` 内の定義に基づき、各モードのルーティングや成果物圧縮が期待通りに機能するかテストします。
+[設計](docs/ARCHITECTURE.md)・[評価方法](docs/EVALUATION.md)・[移行](docs/MIGRATION.md)・[検証結果](docs/VALIDATION-REPORT.md)
 
----
-
-## 🤝 貢献（Contributing）
-
-バグ報告、新しい評価ケース（Eval Cases）の追加、プロトコルの改善提案などの Issue や Pull Request を歓迎します。
-
-1. 本リポジトリをフォーク
-2. 変更用のブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. スクリプトで検証を実行 (`python scripts/validate.py`)
-4. 変更をコミットして PR を作成
-
----
-
-## 📄 ライセンス
-
-[MIT License](https://www.google.com/search?q=LICENSE)
+バージョン：`3.0.0`。ライセンス：[Apache-2.0](LICENSE)。

@@ -1,7 +1,7 @@
 {
   "name": "cognitive-agent-skills",
-  "version": "2.0.1",
-  "description": "Adaptive cognitive routing for decisions, research, planning, and implementation.",
+  "version": "3.0.0",
+  "description": "Decision support for competing options and uncertain problem framing.",
   "author": {
     "name": "Mugen-Ibi",
     "url": "https://github.com/Mugen-Ibi"
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Cognitive Agent Skills",
     "shortDescription": "Match reasoning rigor to the task",
-    "longDescription": "Route each request to the lightest sufficient cognitive protocol, then reframe, verify, challenge, execute, and compress the result at a depth proportional to consequence and uncertainty.",
+    "longDescription": "Resolve uncertain framing and competing options into an actionable decision, with evidence and effort proportional to the consequences. Carry authorized work to its requested outcome.",
     "developerName": "Mugen-Ibi",
     "category": "Productivity",
     "capabilities": [

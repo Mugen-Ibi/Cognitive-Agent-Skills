@@ -1,41 +1,9 @@
-# Evidence discipline
+# Decision-changing evidence
 
-Read this reference when current facts, external sources, measurements, calculations, or repository state could change the result.
+Prioritize claims with both uncertain support and consequences for the choice. Use inspected artifacts or measurements for observed behavior, and relevant primary sources for external claims. Check version, date, population, and scope when they affect applicability.
 
-## Claim handling
+When sources conflict, identify which difference could explain the disagreement rather than averaging claims into certainty. Reproduce decisive calculations where feasible.
 
-For each decision-changing claim, record internally:
+Distinguish observation, inference, assumption, and unknown where the distinction affects action. Put decisive evidence near the supported conclusion. When access or evidence is missing, state the consequence and the specific observation that would resolve it; do not invent verification.
 
-- claim;
-- status: verified, supported but uncertain, inference, assumption, or unknown;
-- source or test;
-- freshness requirement;
-- consequence if wrong.
-
-Verify highest-consequence and highest-uncertainty claims first. Stop when additional evidence is unlikely to change the decision enough to justify its cost.
-
-## Source order
-
-Prefer:
-
-1. direct measurements, inspected artifacts, and executed tests;
-2. primary or official sources;
-3. high-quality secondary synthesis;
-4. clearly labeled inference.
-
-For changing facts, check freshness. For quantitative claims, reproduce calculations when feasible. For software behavior, inspect the relevant version and run a focused test when possible.
-
-## Conflicts and gaps
-
-When evidence conflicts, do not average it into false certainty. Identify whether the conflict comes from scope, definitions, dates, populations, versions, incentives, or methodology.
-
-When verification is blocked, state the unresolved uncertainty and the evidence or event that would resolve it. Do not fill gaps with plausible detail.
-
-## User-facing traceability
-
-Expose only what helps the user judge the result:
-
-- decisive evidence near the supported claim;
-- important assumptions and unknowns;
-- confidence calibrated to evidence quality;
-- the switch condition that would change the recommendation.
+Stop gathering evidence when it no longer has a reasonable chance of changing the requested decision or resolving a material defect. Preserve unresolved uncertainty rather than downgrading its significance.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic repository checks for Cognitive Agent Skills v2."""
+"""Deterministic repository checks for Cognitive Agent Skills."""
 
 from __future__ import annotations
 
@@ -179,8 +179,7 @@ class Validator:
         self.require(frontmatter.get("name") == SKILL.name, "skill name must match its directory")
         self.require(set(frontmatter) == {"name", "description"}, "SKILL.md frontmatter must contain only name and description")
         description = frontmatter.get("description", "")
-        self.require("Lite" in description and "High Precision" in description, "skill description must expose routing scope")
-        self.require("do not use" in description, "skill description must preserve the simple-execution boundary")
+        self.require(bool(description.strip()) and len(description) <= 1024, "skill description must be non-empty and at most 1024 characters")
 
         refs = SKILL / "references"
         present = {path.name for path in refs.glob("*.md")}
