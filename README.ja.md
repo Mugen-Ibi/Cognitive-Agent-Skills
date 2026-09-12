@@ -2,113 +2,92 @@
 
 [English](README.md)
 
-誤ったときのコストに応じて分析の厳密さを調整する、Human–AI認知システムです。
+# Cognitive Agent Skills (v2)
 
-Version 2では、正本となる単一の`cognitive-router` Skillをskills-only Pluginとして配布します。SkillはLite／Standard／High Precisionを選択し、選択したプロトコルだけを読み込み、人間が判断できる大きさに圧縮した結果を返します。これは従来の4 Skill間ディスパッチ構成を置き換える破壊的変更です。
+**Cognitive Agent Skills** は、LLM（大言語モデル）エージェントの思考プロセスと意思決定品質を制御・最適化するための**思考プロトコル（Cognitive Architecture）パッケージ**です。
 
-## なぜSkillとPluginを組み合わせるのか
+単に指示通り出力するだけでなく、タスクの「結果の大きさ（Consequence）」「不可逆性（Reversibility）」「複雑さ」「エビデンス要求度」を自動評価し、最適な思考フレームワークへルーティングします。
 
-- **Skillが実装本体です。** `SKILL.md`とreferencesが認知ワークフローを定義します。
-- **Pluginが配布境界です。** 対応するChatGPT Chat／Work／Codex環境へ、一つの単位として導入・共有できます。
-- **単一の適応型Skillが競合を防ぎます。** 兄弟Skill呼び出しへの依存をなくし、暗黙起動の競合とメタデータの常駐コストを減らします。
-- **Skill単体でも移植できます。** Codex CLI／IDEでは、Plugin内の`cognitive-router`ディレクトリをstandalone Skillとして利用できます。
+---
 
-外部サービスを必要としないため、MCP serverは同梱していません。ホスト環境で利用可能なツールや根拠を使い、新しい認証・運用境界を増やさない設計です。
+## 💡 コアコンセプト
 
-## 3つのモード
+1. **リスク・不可逆性ベースの動的ルーティング**
+   単なる「問題の難しさ」ではなく、「間違えた際の実害の大きさ」や「やり直しが効くか」を基準に、AIの思考深度と検証フローを自動で制御します。
+2. **中間思考のバックグラウンド化と成果物の圧縮（Decision-ready Output）**
+   バックグラウンドで厳格な敵対的レビューや検証を行いながらも、ユーザーには無駄な CoT（思考過程）を出力せず、人間が即座に判断できる形式に凝縮して提示します。
+3. **統合された Plugin / Skill アーキテクチャ**
+   `.codex-plugin/plugin.json` を通じた単一のエントリポイントにより、トリガーの誤判定や重複を防ぎ、各種エージェント環境へそのままデプロイ可能です。
 
-| モード | 適した用途 | 基本動作 |
-|---|---|---|
-| Lite | 低コストでやり直しやすい質問・発想 | 短い再定義と健全性確認 |
-| Standard | 複数ステップと実質的なトレードオフ | 探索、反証、検証、実行、監査 |
-| High Precision | 重大・不可逆・出版・ガバナンス用途 | 根拠マップ、独立再定義、敵対的レビュー、独立監査 |
+---
 
-Routerは一つの依頼の分離可能な部分に別々のモードを適用でき、実際のリスクが判明した時点でエスカレーション／ダウングレードします。
+## 🧩 認知モード（Cognitive Modes）
 
-## リポジトリ構造
+単一のルーティングエンジン（Router）がタスクを判定し、以下のモードおよびモジュールへ分流します。
 
-```text
-.agents/plugins/marketplace.json
-plugins/cognitive-agent-skills/
-├── .codex-plugin/plugin.json
-└── skills/cognitive-router/
-    ├── SKILL.md
-    ├── agents/openai.yaml
-    └── references/
-        ├── routing.md
-        ├── lite.md
-        ├── standard.md
-        ├── high-precision.md
-        └── evidence.md
-docs/
-├── ARCHITECTURE.md
-├── EVALUATION.md
-├── MIGRATION.md
-├── RELEASE.md
-├── REVIEW.md
-└── VALIDATION-REPORT.md
-evals/cases.json
-scripts/validate.py
-```
+| モード | 用途・特徴 |
+| :--- | :--- |
+| **Lite** | **低リスク・可逆的なタスク用**<br>思考の再フレームや選択肢生成を最小限に抑え、迅速な実行・回答を優先します。 |
+| **Standard** | **標準的な意思決定タスク用**<br>意図の確認、問題の再定義（リフレーミング）、多角的な探索、攻撃的テスト（Adversarial Test）、出力の圧縮を一貫して行います。 |
+| **High Precision** | **重大な決定・ガバナンス・安全性に関わるタスク用**<br>独立した再フレーム、エビデンスマッピング、対立検証、決定可能性ゲート（Decision-ready Gate）を通過させます。 |
+| **Evidence Reference** | **エビデンス検証モジュール（独立参照用）**<br>一次情報や直接検証を優先し、意思決定上の価値がなくなった時点で検証を即座に終了する効率的な検索ルールを定義します。 |
 
-## 使い方
+> 💡 **非起動境界（Non-trigger Boundary）**  
+> 判断や検証を伴わない単純なタスク（単純なテキスト整形や定型出力など）に対しては、思考プロトコルを意図的に起動せず、直接実行してオーバーヘッドを削減します。
 
-Pluginを導入後、通常どおり依頼するか、同梱Skillを明示的に指定します。
+---
+
+## 📁 ディレクトリ構造
 
 ```text
-Cognitive Routerを使って、この移行計画を評価し、適切な進め方を提案してください。
+.
+├── .codex-plugin/
+│   └── plugin.json        # プラグインのメタデータと統合エントリポイント
+├── skills/
+│   ├── router.md          # メインのルーティング・決定論的オーバーライド定義
+│   ├── lite.md            # Lite モードの思考プロトコル
+│   ├── standard.md        # Standard モードの思考プロトコル
+│   ├── high-precision.md  # High Precision モードの思考プロトコル
+│   └── evidence.md        # エビデンス照会・検証プロトコル
+├── evals/
+│   └── cases/             # 行動テスト・評価用テストケース
+└── scripts/
+    └── validate.py        # パッケージ整合性・Frontmatter検証用スクリプト
+
 ```
 
-必要な厳密さが分かっている場合は、モードを指定できます。
+---
 
-```text
-Cognitive RouterをHigh Precisionモードで使い、この投稿予定の研究方法を監査してください。
-```
+## 🛠️ 開発とテスト
 
-通常の出力は、結論、根拠、前提、トレードオフ、不確実性、次の行動を示します。内部のchain-of-thoughtは出力しません。
+本リポジトリでは、プロンプトの変更による誤作動（回帰）を防ぐため、Python スクリプトによる自動検証と評価セットを用意しています。
 
-## 導入
+### パッケージ構造の検証
 
-このリポジトリをCodex marketplaceとして追加します。
+フロントマター、相対パス、マークダウンリンクの整合性をチェックします。
 
 ```bash
-codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills
+python scripts/validate.py
+
 ```
 
-ChatGPTデスクトップアプリを再起動し、Plugins Directoryで**Cognitive Agent Skills**を選択して、**Cognitive Agent Skills** Pluginをインストールします。導入したSkillを認識させるため、新しい会話を開始してください。
+### 評価（Evals）の実行
 
-cloneしたリポジトリからローカル開発する場合は、リポジトリrootで次を実行します。
+`evals/cases/` 内の定義に基づき、各モードのルーティングや成果物圧縮が期待通りに機能するかテストします。
 
-```bash
-codex plugin marketplace add .
-```
+---
 
-Codexでstandalone Skillとして利用する場合は、次のディレクトリをユーザーまたはrepository scopeのSkillsディレクトリへコピーまたはリンクします。
+## 🤝 貢献（Contributing）
 
-```text
-plugins/cognitive-agent-skills/skills/cognitive-router
-```
+バグ報告、新しい評価ケース（Eval Cases）の追加、プロトコルの改善提案などの Issue や Pull Request を歓迎します。
 
-standalone SkillとPluginでは対応する製品面が異なります。配布前に[アーキテクチャ](docs/ARCHITECTURE.md)と最新のOpenAI公式ドキュメントを確認してください。
+1. 本リポジトリをフォーク
+2. 変更用のブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. スクリプトで検証を実行 (`python scripts/validate.py`)
+4. 変更をコミットして PR を作成
 
-## 検証
+---
 
-```bash
-python3 scripts/validate.py
-```
+## 📄 ライセンス
 
-Plugin manifest、Skill frontmatter、UI metadata、内部リンク、protocol一覧、評価ケースのschema、廃止したv1構造を検査します。CIでも同じcommandを実行します。
-
-行動評価用ケースと手動手順は[評価ガイド](docs/EVALUATION.md)にあります。
-
-v1の全指摘と対応状況は[全面レビュー](docs/REVIEW.ja.md)にあります。
-
-実行した検証、forward test、修正内容、残る制約は[検証report](docs/VALIDATION-REPORT.md)にあります。
-
-## v1からの移行
-
-Version 2は、package構造と呼び出し方法を変更します。個別の`cognitive-lite`、`cognitive-standard`、`cognitive-high-precision`は、`cognitive-router`が選択するprotocol referenceへ統合されました。詳しくは[移行ガイド](docs/MIGRATION.md)を参照してください。
-
-## 状態とライセンス
-
-Plugin manifestのversionは`2.0.1`です。本projectはApache License 2.0で公開されています。詳しくは[LICENSE](LICENSE)を参照してください。
+[MIT License](https://www.google.com/search?q=LICENSE)
