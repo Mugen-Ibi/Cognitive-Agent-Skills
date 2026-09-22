@@ -2,40 +2,79 @@
 
 [日本語](README.ja.md)
 
-Decision support for competing options and uncertain problem framing. One `cognitive-router` skill helps produce actionable recommendations and complete authorized work while keeping the user's decision burden small.
+Cognitive Agent Skills adds a `cognitive-router` skill that turns uncertain problems and competing options into actionable recommendations. It adjusts the depth of analysis to the consequences of the task and can continue through implementation when the user authorizes it.
 
-Version 3 replaces fixed cognitive sequences with outcome contracts. It preserves Lite, Standard, and High Precision as effort preferences, without changing the host model or permissions.
+Use it for decisions, research planning, architecture, reviews, and other work where the framing or trade-offs are not yet clear. Routine questions and straightforward edits do not need it.
 
-| Depth | Intended use |
-|---|---|
-| Lite | Disposable or easily corrected choices; normally no reference reads |
-| Standard | Interacting constraints and meaningful trade-offs |
-| High Precision | Consequential reliance, costly reversal, or required auditability |
+## Installation
 
-Routine execution and explanation do not need implicit activation. Explicit invocation remains available:
+### Plugin marketplace (recommended)
+
+Use this method in a host that supports Plugin marketplaces.
+
+1. Open the host's Plugin manager and choose the option to add a marketplace.
+2. Enter the repository source:
+
+   ```text
+   Mugen-Ibi/Cognitive-Agent-Skills
+   ```
+
+3. Install **Cognitive Agent Skills** from the added marketplace.
+4. Start a new conversation so the installed skill is available.
+
+The exact menu names may differ between hosts and product versions.
+
+### Standalone skill
+
+If your host supports Agent Skills but not Plugin marketplaces:
+
+1. Clone or download this repository.
+2. Copy the following directory into the Skills directory used by your host:
+
+   ```text
+   plugins/cognitive-agent-skills/skills/cognitive-router
+   ```
+
+3. Restart or reload the host, then start a new conversation.
+
+Consult your host's documentation for the location of its Skills directory. Compatibility with a specific host should be verified in that host; the repository validator only checks this package's structure.
+
+## Usage
+
+The skill may be selected automatically when a request involves uncertain framing, meaningful trade-offs, or consequential decisions. You can also invoke it explicitly:
 
 ```text
 Use Cognitive Router to compare these approaches and recommend one.
+Use Cognitive Router in Standard mode to review this architecture.
 Use Cognitive Router in High Precision mode to audit this methodology.
-Implement the accepted approach within the agreed scope and verify the result.
 ```
 
-## Package
+The skill does not change the selected model, reasoning-effort setting, available tools, or permissions.
 
-- `.agents/plugins/marketplace.json`: repository marketplace.
-- `plugins/cognitive-agent-skills/.codex-plugin/plugin.json`: plugin manifest.
-- `plugins/cognitive-agent-skills/skills/cognitive-router/`: independently packaged skill with conditional references and UI metadata.
-- `evals/cases.json`: behavioral scenarios, not automated model results.
-- `scripts/validate.py`: deterministic package validation.
+## Analysis depth
 
-The existing marketplace installation target is `Mugen-Ibi/Cognitive-Agent-Skills`; the standalone skill path is shown above. Installation UI and host support must be checked against current platform documentation. Repository changes do not automatically update installed copies.
+| Depth | Use when |
+|---|---|
+| Lite | The decision is easy to reverse and a quick recommendation is enough |
+| Standard | Several constraints or meaningful trade-offs interact |
+| High Precision | The result will support consequential, difficult-to-reverse, or auditable work |
+
+The router normally chooses the smallest sufficient depth. An explicit depth request takes precedence when appropriate for the task.
+
+## Updating
+
+Repository changes do not automatically update an installed copy. Use the host's Plugin update function, or replace the standalone `cognitive-router` directory with the version from the latest release.
+
+After updating, start a new conversation before checking the behavior.
 
 ## Development
+
+Run the package validator from the repository root:
 
 ```bash
 python3 scripts/validate.py
 ```
 
-This checks package consistency, not decision quality. See [Architecture](docs/ARCHITECTURE.md), [Evaluation](docs/EVALUATION.md), [Migration](docs/MIGRATION.md), and [Validation report](docs/VALIDATION-REPORT.md).
+This checks package consistency, not the quality of model decisions. See [Architecture](docs/ARCHITECTURE.md), [Evaluation](docs/EVALUATION.md), and the [Validation report](docs/VALIDATION-REPORT.md) for maintainer documentation.
 
-Manifest version: `3.0.0`. License: [Apache-2.0](LICENSE).
+Licensed under [Apache-2.0](LICENSE).
