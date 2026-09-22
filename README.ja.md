@@ -2,36 +2,79 @@
 
 [English](README.md)
 
-複数の選択肢や問題設定の不確かさを、行動に移せる判断へ整理するSkillです。ユーザーの判断負担を減らし、実行を依頼された場合は、許可された範囲で成果物の完成まで進めます。
+Cognitive Agent Skillsは、問題設定が定まっていない課題や複数の選択肢を、実行可能な提案へ整理する`cognitive-router` Skillです。課題の影響に応じて分析の深さを調整し、ユーザーが実行を依頼した場合は許可された範囲で実装まで進めます。
 
-v3では固定された思考手順を廃止し、成果・判断基準・完了条件を中心にしました。Lite／Standard／High Precisionは残しますが、モデルや推論エフォートの設定を変更する機能ではありません。
+意思決定、研究計画、設計、レビューなど、前提やトレードオフを整理する必要がある場面に適しています。単純な質問や定型的な編集では使用する必要はありません。
 
-| 深度 | 用途 |
+## 導入方法
+
+### Plugin Marketplaceから導入する（推奨）
+
+Plugin Marketplaceに対応した環境では、この方法を使用します。
+
+1. 利用環境のPlugin管理画面を開き、Marketplaceを追加する項目を選択します。
+2. リポジトリとして次を入力します。
+
+   ```text
+   Mugen-Ibi/Cognitive-Agent-Skills
+   ```
+
+3. 追加したMarketplaceから **Cognitive Agent Skills** をインストールします。
+4. 新しい会話を開始し、Skillを利用できる状態にします。
+
+画面上の名称は、利用環境や製品バージョンによって異なる場合があります。
+
+### Skillを単体で導入する
+
+Agent Skillsには対応しているものの、Plugin Marketplaceには対応していない環境では、次の方法を使用します。
+
+1. このリポジトリをクローンまたはダウンロードします。
+2. 次のディレクトリを、利用環境が参照するSkillsディレクトリへコピーします。
+
+   ```text
+   plugins/cognitive-agent-skills/skills/cognitive-router
+   ```
+
+3. 利用環境を再起動または再読み込みし、新しい会話を開始します。
+
+Skillsディレクトリの場所は、利用環境のドキュメントを確認してください。特定環境との互換性は、その環境上での確認が必要です。リポジトリの検証スクリプトが確認するのは、パッケージ構造の整合性のみです。
+
+## 使い方
+
+問題設定が不確かである場合、重要なトレードオフがある場合、または判断の影響が大きい場合には、自動的に選択されることがあります。明示的に指定することもできます。
+
+```text
+Cognitive Routerで複数の案を比較し、1つ推奨してください。
+Cognitive RouterのStandardモードで、この設計をレビューしてください。
+Cognitive RouterのHigh Precisionモードで、この研究方法を監査してください。
+```
+
+このSkillは、選択中のモデル、推論エフォート、利用可能なツール、権限を変更しません。
+
+## 分析の深さ
+
+| 深度 | 適した場面 |
 |---|---|
-| Lite | 容易にやり直せる選択。通常は追加資料を読まず回答 |
-| Standard | 複数の制約やトレードオフがある判断 |
-| High Precision | 重大な影響、変更の難しさ、監査可能性が求められる判断 |
+| Lite | 容易にやり直せる判断で、短い提案があれば十分な場合 |
+| Standard | 複数の制約や重要なトレードオフが関係する場合 |
+| High Precision | 重大な影響、変更の難しさ、監査可能性が求められる場合 |
 
-単純な編集や説明では自動起動を求めません。明示的に「Cognitive Routerで比較して」「High Precisionで研究方法を監査して」と依頼できます。レビューの依頼だけで実装権限を広げることはありません。
+通常は、課題を解決できる最小限の深度が選択されます。深度を明示した場合は、課題に適している範囲でその指定が優先されます。
 
-## 構成
+## 更新方法
 
-- `.agents/plugins/marketplace.json`：マーケットプレイス定義
-- `plugins/cognitive-agent-skills/.codex-plugin/plugin.json`：Plugin定義
-- `plugins/cognitive-agent-skills/skills/cognitive-router/`：Skillと必要時に読む参照資料
-- `evals/cases.json`：行動評価ケース
-- `scripts/validate.py`：パッケージ整合性検証
+リポジトリを更新しても、導入済みのコピーには自動で反映されません。利用環境のPlugin更新機能を使用するか、単体導入した`cognitive-router`ディレクトリを最新リリースのものに置き換えてください。
 
-既存の導入先は `Mugen-Ibi/Cognitive-Agent-Skills` です。利用環境ごとの導入手順・対応状況は公開前に公式資料と実機で確認してください。リポジトリの更新だけでは導入済みSkillは更新されません。
+更新後は、新しい会話を開始して動作を確認してください。
 
-## 検証
+## 開発
+
+リポジトリのルートで、パッケージ検証を実行できます。
 
 ```bash
 python3 scripts/validate.py
 ```
 
-この検証は構造の整合性を確認します。判断品質の向上を証明するものではありません。
+この検証が確認するのはパッケージの整合性であり、モデルによる判断の品質ではありません。保守者向けの情報は、[設計](docs/ARCHITECTURE.md)、[評価方法](docs/EVALUATION.md)、[検証結果](docs/VALIDATION-REPORT.md)を参照してください。
 
-[設計](docs/ARCHITECTURE.md)・[評価方法](docs/EVALUATION.md)・[移行](docs/MIGRATION.md)・[検証結果](docs/VALIDATION-REPORT.md)
-
-バージョン：`3.0.0`。ライセンス：[Apache-2.0](LICENSE)。
+ライセンスは[Apache-2.0](LICENSE)です。
