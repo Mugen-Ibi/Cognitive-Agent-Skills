@@ -3,7 +3,7 @@
 Use this checklist for every Plugin release.
 
 1. Recheck the current official OpenAI Skills and Plugins documentation for surface support and manifest changes.
-2. Run `python3 scripts/validate.py`.
+2. Run `python3 scripts/validate.py` and `python3 -m unittest discover -s tests -v`.
 3. Run the current authoring environment's official Skill and Plugin validators.
 4. Execute the behavioral cases in fresh conversations, including the negative implicit-trigger case.
 5. Review permissions and confirm that no MCP, app, hook, or external data dependency was added unintentionally.

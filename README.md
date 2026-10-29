@@ -73,6 +73,7 @@ Run the package validator from the repository root:
 
 ```bash
 python3 scripts/validate.py
+python3 -m unittest discover -s tests -v
 ```
 
 This checks package consistency, not the quality of model decisions. See [Architecture](docs/ARCHITECTURE.md), [Evaluation](docs/EVALUATION.md), and the [Validation report](docs/VALIDATION-REPORT.md) for maintainer documentation.

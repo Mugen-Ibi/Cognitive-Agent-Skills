@@ -1,3 +1,28 @@
+# Validator hardening — 2026-10-29
+
+Base revision: `abb8b30`. Runtime skill text and manifest version are unchanged.
+
+- `python3 scripts/validate.py`: passed.
+- `python3 -m unittest discover -s tests -v`: 26 tests passed on Python 3.12.
+- `python3 -m compileall -q scripts tests` and `git diff --check`: passed.
+- The initial 20 regression tests reproduced 36 failed subtests and 6 exceptions
+  in the baseline validator before implementation.
+
+The checks now cover strict [SemVer 2.0.0](https://semver.org/), malformed metadata,
+duplicate JSON/frontmatter keys, invalid encodings and HTTPS URLs, evaluation mode
+consistency, and local file/link boundaries. Generated dependency/cache directories
+are pruned from the text scan. No third-party Python dependencies were introduced.
+CI now executes the regression suite and uses SHA-pinned
+[checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1) and
+[setup-python v7.1.0](https://github.com/actions/setup-python/releases/tag/v7.1.0).
+Both use Node 24 and require runner 2.327.1 or later; this workflow uses GitHub-hosted
+`ubuntu-latest`. The updated workflow has not yet run on GitHub.
+
+These are deterministic validator results, not new behavioral model evaluations,
+host-installation checks, or proof of public Plugin Directory compatibility.
+
+---
+
 # v3 validation — 2026-09-12
 
 Base revision: `6745026`. Proposed manifest version: `3.0.0`.

@@ -1,3 +1,10 @@
+# Unreleased
+
+- Correct strict SemVer validation and reject malformed or ambiguous package metadata.
+- Report invalid URLs, encodings, and evaluation modes instead of crashing.
+- Keep local links and file reads within the distributed package/repository.
+- Add dependency-free validator regression tests and pin current stable CI actions.
+
 # 3.0.0 — 2026-09-12
 
 - Narrow implicit discovery to decision support; retain explicit mode requests.

@@ -73,6 +73,7 @@ Cognitive RouterのHigh Precisionモードで、この研究方法を監査し�
 
 ```bash
 python3 scripts/validate.py
+python3 -m unittest discover -s tests -v
 ```
 
 この検証が確認するのはパッケージの整合性であり、モデルによる判断の品質ではありません。保守者向けの情報は、[設計](docs/ARCHITECTURE.md)、[評価方法](docs/EVALUATION.md)、[検証結果](docs/VALIDATION-REPORT.md)を参照してください。
