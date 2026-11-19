@@ -118,6 +118,14 @@ class Validator:
         self.require((PLUGIN / "skills").is_dir(), "manifest skills directory does not exist")
         self.require("mcpServers" not in data and "apps" not in data, "skills-only plugin must not declare MCP or app configuration")
 
+        portable = self.load_json(PLUGIN / "plugin.json")
+        expected = {key: value for key, value in data.items() if key not in {"skills", "interface"}}
+        expected["$schema"] = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+        expected["extensions"] = {"com.openai": {"interface": interface}}
+        self.require(portable == expected, "portable manifest must match the Codex package metadata")
+        if isinstance(interface, dict) and isinstance(interface.get("shortDescription"), str):
+            self.require(len(interface["shortDescription"]) <= 30, "listing subtitle exceeds 30 characters")
+
     def validate_marketplace(self) -> None:
         data = self.load_json(MARKETPLACE)
         if not isinstance(data, dict):
@@ -190,8 +198,8 @@ class Validator:
         expected_yaml = (
             'interface:\n'
             '  display_name: "Cognitive Router"\n'
-            '  short_description: "Match reasoning rigor to each task"\n'
-            '  default_prompt: "Use $cognitive-router to analyze this request at the right depth."\n'
+            '  short_description: "Route tasks to the best available agent"\n'
+            '  default_prompt: "Use $cognitive-router to select the best available agent and complete this task."\n'
             '\n'
             'policy:\n'
             '  allow_implicit_invocation: true\n'
@@ -216,7 +224,8 @@ class Validator:
         if not isinstance(data, dict):
             self.errors.append("evaluation file must be a JSON object")
             return
-        self.require(data.get("schema_version") == 1, "unsupported evaluation schema_version")
+        self.require(data.get("schema_version") == 2, "unsupported evaluation schema_version")
+        self.validate_agent_routes(data.get("agent_routes"))
         cases = data.get("cases")
         self.require(isinstance(cases, list) and len(cases) >= 10, "at least ten evaluation cases are required")
         if not isinstance(cases, list):
@@ -248,6 +257,43 @@ class Validator:
         self.require({"lite", "standard", "high-precision", "mixed", None} <= modes, "evaluation cases must cover every mode and a non-trigger")
         self.require(triggers == {True, False}, "evaluation cases must cover trigger and non-trigger behavior")
         self.require(any("overrides-lite" in case_id for case_id in ids), "a safety override regression case is required")
+
+    def validate_agent_routes(self, routes: object) -> None:
+        if not isinstance(routes, list):
+            self.errors.append("agent_routes must be a list of host scenarios")
+            return
+
+        ids: set[str] = set()
+        actions: set[str] = set()
+        model_pairs: set[tuple[str, str]] = set()
+        for index, route in enumerate(routes):
+            if not isinstance(route, dict):
+                self.errors.append(f"agent route {index} must be an object")
+                continue
+            fields = ("id", "prompt", "current_model", "expected_action", "observe")
+            if not all(isinstance(route.get(k), str) and route[k].strip() for k in fields):
+                self.errors.append(f"agent route {index} has missing or invalid text fields")
+                continue
+            case_id = route["id"]
+            self.require(case_id not in ids, f"duplicate agent route: {case_id}")
+            ids.add(case_id)
+            workers = route.get("available_workers")
+            if not isinstance(workers, list) or not all(isinstance(w, str) and w.strip() for w in workers):
+                self.errors.append(f"{case_id} needs a list of available worker models")
+                continue
+            action = route["expected_action"]
+            actions.add(action)
+            target = route.get("target")
+            if action == "local":
+                self.require(target is None, f"{case_id} should stay with the current model")
+            else:
+                self.require(target in workers, f"{case_id} targets an unavailable worker")
+            if action == "delegate" and isinstance(target, str):
+                model_pairs.add((route["current_model"], target))
+
+        self.require(actions == {"local", "delegate", "recommend", "recover"}, "incomplete agent route action coverage")
+        sol, astra = "gpt-6.2-sol", "gpt-6.2-astra"
+        self.require({(sol, astra), (astra, sol)} <= model_pairs, "cover GPT-6.2 dispatch in both directions")
 
     def validate_repository_text(self) -> None:
         link_pattern = re.compile(r"\[[^\]]+\]\(([^)]+)\)")

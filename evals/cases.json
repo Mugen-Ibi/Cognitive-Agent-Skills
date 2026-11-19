@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "cases": [
     {
       "id": "lite-variable-name",
@@ -161,6 +161,76 @@
       "should_trigger": true,
       "expected_mode": "lite",
       "rationale": "Explicit use remains available without required reference reads."
+    }
+  ],
+  "agent_routes": [
+    {
+      "id": "complex-cutover",
+      "prompt": "Use Cognitive Router. Starting from Sol, design a cutover for an order database with offline writes in two regions, retries and regional failover. Compare two designs and identify the failure that distinguishes them.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.2-astra"],
+      "expected_action": "delegate",
+      "target": "gpt-6.2-astra",
+      "observe": "A single model-targeted worker returns the design. The parent checks and delivers it."
+    },
+    {
+      "id": "speed-sensitive-batch",
+      "prompt": "Use Cognitive Router. Astra is selected. For this batch of routine coding work, turnaround matters and transferring the complete batch costs negligible time. Generate a JSON map from every key ERR_001 through ERR_120 to its lower-case dotted form such as err.001. Return the complete map without omissions.",
+      "current_model": "gpt-6.2-astra",
+      "available_workers": ["gpt-6.2-sol"],
+      "expected_action": "delegate",
+      "target": "gpt-6.2-sol",
+      "observe": "One worker produces the batch. Parse the delivered JSON and check all 120 keys and values against the specified mapping."
+    },
+    {
+      "id": "keep-on-tie",
+      "prompt": "Use Cognitive Router. Give me two names for a throwaway demo folder.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.2-astra"],
+      "expected_action": "local",
+      "observe": "Two names are returned locally with no worker startup."
+    },
+    {
+      "id": "model-lock",
+      "prompt": "Use Cognitive Router. Use only my selected Sol model to design a cutover with offline writes, retries and regional failover.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.2-astra"],
+      "expected_action": "local",
+      "observe": "The parent completes the analysis with the pinned model."
+    },
+    {
+      "id": "no-dispatch",
+      "prompt": "Use Cognitive Router. Switch to a better model if possible and audit this two-region cutover for replay and failover.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": [],
+      "expected_action": "local",
+      "observe": "Disable scoped model overrides too. The response accurately reports local execution and supplies the feasible audit."
+    },
+    {
+      "id": "partial-worker-failure",
+      "prompt": "Use Cognitive Router. Implement the two-region cutover and exercise the replay and failover tests in the supplied disposable fixture.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.2-astra"],
+      "expected_action": "recover",
+      "target": "gpt-6.2-astra",
+      "observe": "Inject a timeout after a worker edit, then report that the worker stopped. Check status and the partial edit before resuming, verify the final result, and avoid duplicate writes."
+    },
+    {
+      "id": "advice-only",
+      "prompt": "Which available agent would you use for a complex database cutover? Recommend a model only.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.2-astra"],
+      "expected_action": "recommend",
+      "target": "gpt-6.2-astra",
+      "observe": "The model is recommended without a worker call or cutover execution."
+    },
+    {
+      "id": "specialist-missing-surface",
+      "prompt": "Use Cognitive Router to check the reading order on the currently attached settings screen.",
+      "current_model": "gpt-6.2-sol",
+      "available_workers": ["gpt-6.1-terra"],
+      "expected_action": "local",
+      "observe": "Give only the parent access to a live screen which cannot be transferred. It inspects the actual screen in its own context."
     }
   ]
 }

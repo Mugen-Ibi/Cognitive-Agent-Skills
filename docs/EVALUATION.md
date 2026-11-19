@@ -1,13 +1,21 @@
 # Evaluation
 
-Run `python3 scripts/validate.py` for structural consistency. This does not execute behavioral cases or prove model quality.
+Run `python3 scripts/validate.py` to check package metadata, references, and fixture consistency. The behavioral cases in `evals/cases.json` require a separate host run.
 
-## Compare behavior
+## Agent routing
 
-Use the same model, tools, permissions, task artifacts, and budget for v2, v3, and no-skill conditions. Record the exact revisions and model settings. Give fresh conversations only the case prompt and required raw artifacts, not expected labels or evaluator criteria. For discovery tests expose the metadata catalog without forcing invocation. For explicit tests supply the requested skill. Provide a disposable CSV fixture for the implementation case and the actual proposal for review cases; missing fixtures are not model failures.
+Run each case with a fresh conversation and the specified host fixture. Set the starting model, expose only the listed worker targets, and simulate the stated failure when specified. A host fixture describes the test environment. Keep its expected route and evaluator notes out of the prompt. For implicit discovery, expose the catalog normally. For explicit invocation, load the packaged skill. Record the host version and model catalog.
 
-Record task completion and artifact correctness, evidence accuracy, unauthorized actions, unnecessary questions, user decisions required, loaded references, latency, and tokens when available. Unavailable measurements stay unavailable. Evaluate mode labels only as diagnostic hints; a mode announcement and fixed sections are not required. Mixed effort need not be a visible state transition.
+| Observation | Pass condition |
+|---|---|
+| Executor | A material advantage leads to the expected target. Ties, model locks, and handoff overhead keep work local. |
+| Dispatch | For a worker route, observe the native tool call, explicit target, worker result, and parent delivery. A suggested model name alone is insufficient. |
+| Availability | Unavailable or denied routes yield an accurate fallback. A timed-out or partially completed write is reconciled before any retry. |
+| Completion | The delivered answer or checked artifact satisfies the task and its original constraints. Workers execute directly and stay within the task. |
+| Reporting | Any switch is described at the scope the host confirms. Distinguish requested and confirmed models. |
 
-Acceptance requires no invented execution/evidence or unauthorized actions, correct handling of explicit depth and material uncertainty, and non-activation on routine negative cases. Assess whether v3 reduces unnecessary overhead without reducing completion or decision quality. A small sample cannot establish universal gains; compare failures and repeat representative cases before release.
+## Analysis and discovery
 
-Retain regressions for safety, publication readiness, and required independence. Correct narrow demonstrated failures rather than restoring universal ceremony. Re-run affected cases and deterministic validation after changes. Historical v2 forward tests do not count as v3 results.
+Retain the earlier decision-support cases. For the implementation case supply a disposable CSV fixture. Provide the proposal for review cases. Check explicit depth, safety, publication readiness, required independence, permission boundaries, and non-activation on routine requests. A mode announcement is optional.
+
+To measure an improvement, compare the same starting model with and without the skill on identical inputs, permissions, and budgets. Record task success, elapsed time, tokens when available, and handoff failures. Read the dated [validation report](VALIDATION-REPORT.md) for the tests actually performed.

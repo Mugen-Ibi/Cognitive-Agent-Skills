@@ -1,4 +1,10 @@
-# Migration to v3
+# Migration to v4
+
+Keep the same marketplace, plugin name, and `cognitive-router` invocation. In v4, selecting a model in the picker expresses a preference. The skill may now dispatch authorized work to a different model when the host permits it. To retain single-model execution, say “use only my selected model” or “do not delegate”. Integrations that need advice without execution can ask for a model recommendation only.
+
+Lite, Standard, and High Precision still control analysis depth. Existing prompts using those names continue to work. Update the installed package from the intended source and start a fresh conversation to load the new skill.
+
+## Historical migration to v3
 
 The plugin and skill names, marketplace target, reference paths, and implicit-invocation policy remain unchanged. Update the installed package through the host's supported update mechanism after release; this branch does not update existing installations.
 

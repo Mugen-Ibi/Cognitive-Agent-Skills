@@ -1,7 +1,7 @@
 interface:
   display_name: "Cognitive Router"
-  short_description: "Match reasoning rigor to each task"
-  default_prompt: "Use $cognitive-router to analyze this request at the right depth."
+  short_description: "Route tasks to the best available agent"
+  default_prompt: "Use $cognitive-router to select the best available agent and complete this task."
 
 policy:
   allow_implicit_invocation: true

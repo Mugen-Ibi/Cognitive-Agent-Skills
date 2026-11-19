@@ -9,6 +9,12 @@
 
 # Changelog
 
+## 4.0.0 - 2026-11-19
+
+- Route work to a suitable available agent before choosing analysis depth. Use GPT-6.2 Sol and Astra according to the advertised capabilities and the cost of handoff.
+- Execute better-fit routes with a host-supported model override or a single worker, respect explicit model locks, and recover locally when a handoff is unavailable.
+- Keep the existing skill invocation and analysis modes. Add agent-routing evaluation scenarios and a portable manifest alongside the Codex manifest.
+
 ## 2.0.1 - 2026-09-06
 
 - Add a repository marketplace manifest so `codex plugin marketplace add Mugen-Ibi/Cognitive-Agent-Skills` can discover the Plugin.

@@ -12,4 +12,4 @@ Judge the deliverable's intended reliance, not topic keywords. Brainstorming res
 
 For coupled decisions, preserve the rigor needed by their consequential dependencies. For separable work, vary effort locally without formal transitions or repeated audits. A downstream artifact may remain provisional while earlier work is complete.
 
-Urgency changes the affordable investigation, not the truth of unverified claims. If time prevents closure, give a conditional recommendation with the unresolved risk visible. Do not imply that this skill changes the host model or reasoning-effort setting.
+If time prevents closure, give a conditional recommendation with the unresolved risk visible. Choose analysis depth independently of the executor. Apply the agent selection and handoff rules in the [skill entrypoint](../SKILL.md).

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "cognitive-agent-skills",
+  "version": "4.0.0",
+  "description": "Automatic agent and model routing for GPT-6.2 workflows with task-appropriate analysis.",
+  "author": {
+    "name": "Mugen-Ibi",
+    "url": "https://github.com/Mugen-Ibi"
+  },
+  "homepage": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+  "repository": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "decision-making",
+    "agent-routing",
+    "model-selection",
+    "research",
+    "cognitive-routing"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Cognitive Agent Skills",
+        "shortDescription": "Route tasks to the right agent",
+        "longDescription": "Select an available agent for the task, hand work to a better-suited model when the host supports it, and verify the result. Keep the selected model when it fits or when the user pins it.",
+        "developerName": "Mugen-Ibi",
+        "category": "Productivity",
+        "capabilities": [
+          "Analysis",
+          "Decision Support",
+          "Research"
+        ],
+        "websiteURL": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
+        "defaultPrompt": [
+          "Use Cognitive Router to choose the best available agent and complete this task.",
+          "Use Cognitive Router in Standard mode to compare these options.",
+          "Use Cognitive Router in High Precision mode to audit this plan."
+        ]
+      }
+    }
+  }
+}

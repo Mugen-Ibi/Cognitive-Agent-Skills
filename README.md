@@ -2,9 +2,9 @@
 
 [日本語](README.ja.md)
 
-Cognitive Agent Skills adds a `cognitive-router` skill that turns uncertain problems and competing options into actionable recommendations. It adjusts the depth of analysis to the consequences of the task and can continue through implementation when the user authorizes it.
+`cognitive-router` automatically selects an agent to carry out the task. The model you selected is the starting point. When another available agent has a material advantage, the router sends it the work, checks the result, and returns it in the same conversation.
 
-Use it for decisions, research planning, architecture, reviews, and other work where the framing or trade-offs are not yet clear. Routine questions and straightforward edits do not need it.
+For example, a complex cross-service migration may go from GPT-6.2 Sol to Astra. A large batch of straightforward edits with a tight deadline may go from Astra to Sol. For a one-line fix, staying in the current context usually takes less time. These are routing preferences based on the host's model descriptions. Actual availability, tools, context-transfer cost, and your constraints determine the choice.
 
 ## Installation
 
@@ -41,15 +41,15 @@ Consult your host's documentation for the location of its Skills directory. Comp
 
 ## Usage
 
-The skill may be selected automatically when a request involves uncertain framing, meaningful trade-offs, or consequential decisions. You can also invoke it explicitly:
+The host can select the skill for complex or specialist work and decision support. Invoke it explicitly to request routing on any task.
 
 ```text
-Use Cognitive Router to compare these approaches and recommend one.
-Use Cognitive Router in Standard mode to review this architecture.
-Use Cognitive Router in High Precision mode to audit this methodology.
+Use Cognitive Router to design and verify a migration that tolerates replay and failover.
+Use Cognitive Router for this batch of mechanical edits. Prioritize turnaround time.
+Use only my selected model. Use Cognitive Router in High Precision mode to audit this proposal.
 ```
 
-The skill does not change the selected model, reasoning-effort setting, available tools, or permissions.
+On Codex, the router can give one worker an explicit model and wait for its output. The main chat retains the model shown in the picker. If the host cannot dispatch to a better model, the current agent completes the work within its capabilities. An explicit model lock or a request to avoid delegation takes precedence. A request for advice about models only returns a recommendation.
 
 ## Analysis depth
 

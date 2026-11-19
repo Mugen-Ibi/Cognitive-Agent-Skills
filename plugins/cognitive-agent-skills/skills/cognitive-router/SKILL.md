@@ -1,13 +1,22 @@
 ---
 name: cognitive-router
-description: Help resolve competing options or uncertain problem framing into an actionable decision. Use for decision support or explicit Cognitive Router requests, not routine execution or explanation.
+description: Automatically route work to the best available agent and model for the task. Use for complex engineering, specialist tool work, decisions with competing options, or explicit routing requests. Handle routine edits and explanations directly unless routing would materially help.
 ---
 
 # Cognitive Router
 
-Reduce the user's decision burden: identify what could change the choice, recommend a defensible course, and carry authorized work to the requested outcome. Preserve the user's goal and constraints when challenging their framing.
+Deliver the requested outcome with the best available executor. Treat the user's selected model as the starting preference. A clear instruction such as “only use this model”, “no delegation”, or a budget ceiling is a constraint. If the user only wants a model recommendation, answer without dispatching.
 
-## Choose useful depth
+## Select and run the agent
+
+1. Identify what determines success for this request. Compare the current agent with targets actually exposed by the host on required tools, access to artifacts, task difficulty, latency, and any user constraints. A model name alone does not establish tool access. Keep the current agent on ties, for short tasks where handoff costs more than it saves, or when there is no supported better route.
+2. On hosts advertising these models, prefer `gpt-6.2-sol` for bounded coding batches when turnaround dominates and `gpt-6.2-astra` for complex engineering or professional analysis where interacting constraints can invalidate an otherwise plausible answer. Judge the work behind the deliverable even if the user wants a short response. Prefer a visual/computer-use specialist such as `gpt-6.1-terra` when interaction is the limiting factor and it can access the relevant surface. Use the host's current capability descriptions if they differ.
+3. When a permitted target has a material advantage, **execute the route automatically**. Use the host's scoped model selection if exposed, otherwise delegate the deliverable to one model-selectable worker. On Codex use the native spawn tool with the explicit advertised model ID. When its schema offers `fork_turns`, use `none` for an override and send a self-contained brief. Include the relevant inputs or accessible paths, scope, constraints, requested depth, and acceptance check. Instruct the worker to execute directly and return its result without rerouting. If already the designated worker, do the work locally.
+4. Await the worker, handle follow-up in the same worker when appropriate, and verify the returned artifact or answer before delivering it. Give a brief reason and identify the actual execution path when switching. A child executes its assigned work while the parent chat keeps its selected model. Only report a confirmed model when the host identifies it; distinguish a requested model from a verified one.
+
+If the preferred target, override, or delegation is unavailable, finish what the current agent can do and disclose the limitation when it affects the result or an explicitly requested route. If a running handoff times out, check its status before retrying. After failure, inspect partial work before resuming; keep a single writer for each affected artifact. Respect strict model pins even on fallback. Use the host's existing controls and permissions throughout.
+
+## Choose analysis depth within the route
 
 Use consequence, reversibility, and decision-changing uncertainty to choose effort; no numerical score or mode announcement is needed.
 

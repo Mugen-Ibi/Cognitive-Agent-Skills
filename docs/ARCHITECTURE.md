@@ -1,38 +1,25 @@
-# Architecture: v3 outcome contracts
+# Agent routing in v4
 
-Status: proposed for merge; 2026-09-12.
+The marketplace distributes one skill, `cognitive-router`. Its first decision is who can complete the task. The selected model is the baseline. The router compares candidates only when the host advertises them and the task gives a reason to switch. Its second decision is how much verification the deliverable needs.
 
-## Basis
+## Selecting an executor
 
-The [OpenAI article](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) recommends precise discovery descriptions, conditional references, less prescribed process, and explicit completion boundaries. The choices below are this project's application of that guidance, not measured performance claims.
+| Situation | Routing decision |
+|---|---|
+| Complex coding or professional analysis with interacting constraints | Consider GPT-6.2 Astra if its capabilities justify moving the work |
+| Bounded, repetitive coding with a meaningful turnaround requirement | Consider GPT-6.2 Sol if the expected saving exceeds the handoff cost |
+| Work that depends on inspecting a live visual surface | Consider a visual specialist only if it can access that surface |
+| A tie, a small task, or high cost of transferring context | Continue in the current agent |
+| An explicit model lock, budget ceiling, or delegation restriction | Limit eligible candidates to those satisfying the constraint |
 
-## Decision
+These are qualitative preferences from the Codex model catalog. The host's advertised capabilities govern each invocation. No benchmark-derived speedup, cost ratio, or universal ranking is assumed.
 
-Keep one `cognitive-router` skill distributed by the existing skills-only plugin and marketplace. Preserve its public name and reference paths. Change the runtime contract from mandatory protocol execution to decision support proportional to consequence and uncertainty.
+## Executing a route
 
-| v2 constraint | v3 decision | Reason |
-|---|---|---|
-| Broad reviews/research/implementation trigger | Competing options, uncertain framing, explicit invocation | Avoid competing with ordinary execution skills |
-| Always read routing and one mode | Inline depth guidance; conditional references | Direct choices need no extra reads |
-| Five numerical dimensions and thresholds | Qualitative consequence and reliance | Avoid false precision and routing work |
-| Six to thirteen ordered stages | Observable outcome and relevant criteria | Allow task-dependent order |
-| Reframe and option counts | Material alternatives only | Avoid manufactured choices |
-| Generic human decision phase | Existing scope and authority determine boundaries | Avoid renewed approval for authorized work |
-| One defect-repair retry | Continue useful recoverable repairs within scope | Avoid premature stopping |
-| Mode-matching as main evaluation | Completion, boundary, evidence, user burden | Evaluate utility rather than ceremony |
+A host may support a scoped override directly. Codex can also dispatch one worker with an explicit model. A fresh context receives the task, required inputs, user constraints, and acceptance criteria. The worker performs the task directly. The parent waits, checks the result, and returns it in the original conversation. The worker's model applies to the delegated work. The parent keeps its session and model selection.
 
-## Runtime and compatibility
+Tool access, scope, and permissions must hold in the execution context. The router checks in-flight state and partial changes before resuming a failed handoff. If no eligible route is exposed, it completes the feasible work in the current context and reports a material shortfall. A strict model requirement still applies.
 
-Discovery selects the skill for decision support. The entrypoint can handle Lite directly; Standard, High Precision, ambiguous routing, and evidence references are conditional. Mixed tasks use local rigor without a mandatory transition state machine.
+## Analysis and packaging
 
-Lite, Standard, and High Precision remain accepted user vocabulary, not model selectors or API reasoning-effort controls. Host permissions remain authoritative. A review request does not authorize implementation; an authorized implementation request should continue through relevant verification.
-
-No new MCP server, agent orchestrator, model-specific fork, personal-memory store, or always-loaded AGENTS.md is needed. This repository has no AGENTS.md to simplify. Do not add one merely to repeat the skill.
-
-The manifest paths are retained. Product-surface and Claude Code installation compatibility are not established by this redesign; consult current platform documentation and perform installation checks before release. Installed copies do not update merely because this branch changes.
-
-## Trade-offs and validation
-
-Less prescription may cause weaker models to miss useful analysis. Compare v2, v3, and no-skill baselines on identical tasks before claiming improvement or adding model-specific guidance. The narrowed trigger may miss implicit requests; evaluate discovery separately from explicit invocation. Historical v2 reports do not validate v3.
-
-Version 3.0.0 reflects changed routing and completion semantics despite stable paths. See [Evaluation](EVALUATION.md) and [Migration](MIGRATION.md).
+The existing Lite, Standard, High Precision, and evidence references remain conditional. Any eligible executor may apply any needed depth. The package uses native host tools, with a portable manifest and a Codex compatibility manifest pointing to the same skill. Implicit discovery depends on the host. See the [evaluation procedure](EVALUATION.md) for how to distinguish a proposed route from completed execution.

@@ -1,7 +1,7 @@
 {
   "name": "cognitive-agent-skills",
-  "version": "3.0.0",
-  "description": "Decision support for competing options and uncertain problem framing.",
+  "version": "4.0.0",
+  "description": "Automatic agent and model routing for GPT-6.2 workflows with task-appropriate analysis.",
   "author": {
     "name": "Mugen-Ibi",
     "url": "https://github.com/Mugen-Ibi"
@@ -11,15 +11,16 @@
   "license": "Apache-2.0",
   "keywords": [
     "decision-making",
-    "reasoning",
+    "agent-routing",
+    "model-selection",
     "research",
     "cognitive-routing"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Cognitive Agent Skills",
-    "shortDescription": "Match reasoning rigor to the task",
-    "longDescription": "Resolve uncertain framing and competing options into an actionable decision, with evidence and effort proportional to the consequences. Carry authorized work to its requested outcome.",
+    "shortDescription": "Route tasks to the right agent",
+    "longDescription": "Select an available agent for the task, hand work to a better-suited model when the host supports it, and verify the result. Keep the selected model when it fits or when the user pins it.",
     "developerName": "Mugen-Ibi",
     "category": "Productivity",
     "capabilities": [
@@ -29,7 +30,7 @@
     ],
     "websiteURL": "https://github.com/Mugen-Ibi/Cognitive-Agent-Skills",
     "defaultPrompt": [
-      "Use Cognitive Router to analyze this request at the right depth.",
+      "Use Cognitive Router to choose the best available agent and complete this task.",
       "Use Cognitive Router in Standard mode to compare these options.",
       "Use Cognitive Router in High Precision mode to audit this plan."
     ]

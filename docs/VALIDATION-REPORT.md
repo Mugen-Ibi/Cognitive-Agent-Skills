@@ -1,4 +1,19 @@
-# v3 validation — 2026-09-12
+# v4 agent routing — 2026-11-19
+
+Tested on Windows with Codex CLI `0.169.0-alpha.11.1`. Installed the repository marketplace plugin into a disposable Codex home. The host reported version `4.0.0`; its skill catalog listed `cognitive-agent-skills:cognitive-router` as enabled. The installed entrypoint matched the source by SHA-256.
+
+| Live test | Observed result |
+|---|---|
+| Two-region cutover with offline writes, retries, and failover | A Sol parent requested an Astra worker with a fresh context, waited for the worker, and delivered the comparison. The worker's turn metadata identified GPT-6.2 Astra. |
+| Speed-sensitive batch conversion | An Astra parent requested a Sol worker. The worker's turn metadata identified GPT-6.2 Sol. The delivered JSON parsed and all 120 key/value pairs matched the specification. |
+| Same cutover with an explicit Sol lock | The Sol parent completed the design. Its transcript contained no spawn call. |
+| Host instruction restricting execution to the current agent | Sol reported the restriction and supplied a local cutover design. The transcript showed no worker dispatch. |
+
+The CLI behavior tests explicitly supplied the installed skill text. An exploratory app-server run on a short cutover prompt stayed local. After clarifying how to judge the underlying work even for a short answer, two app-server tests loaded the final entrypoint via native skill input. The Sol-to-Astra cutover and Astra-to-Sol batch both completed. The final batch output also matched all 120 expected pairs. Routing depends on task framing and host capabilities.
+
+The repository validator, Skill Creator validator, and Git whitespace check passed. The full behavioral suite, implicit activation rates, failure recovery after partial writes, and comparative cost, latency, or quality gains have not been measured.
+
+## Historical v3 validation — 2026-09-12
 
 Base revision: `6745026`. Proposed manifest version: `3.0.0`.
 
